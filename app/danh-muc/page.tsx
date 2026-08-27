@@ -19,7 +19,7 @@ export default function CategoriesPage() {
               <div className="directory-number">0{index + 1}</div>
               <div className="directory-icon">{category.icon}</div>
               <div className="directory-copy"><p className="eyebrow">{category.count} gợi ý</p><h2>{category.name}</h2><p>{category.copy}. Nội dung tập trung vào lựa chọn thực tế, dễ so sánh và vừa ngân sách.</p><div className="example-tags">{examples.map((deal) => <span key={deal.id}>{deal.icon} {deal.name}</span>)}</div></div>
-              <Link href={`/deal-hot?q=${encodeURIComponent(category.name)}`}>Xem deal {category.name} <span>→</span></Link>
+              <Link href={`/danh-muc/${category.id}`}>Mở danh mục {category.name} <span>→</span></Link>
             </article>
           );
         })}
@@ -27,4 +27,3 @@ export default function CategoriesPage() {
     </main>
   );
 }
-

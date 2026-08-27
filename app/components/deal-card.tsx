@@ -14,9 +14,8 @@ export function DealCard({ deal }: { deal: Deal }) {
         <p className="deal-description">{deal.description}</p>
         <div className="deal-price"><strong>{deal.price}</strong><del>{deal.oldPrice}</del></div>
         <div className="deal-meta"><span>★ {deal.rating}</span><span>Đã bán {deal.sold}</span></div>
-        <a href={deal.url} target="_blank" rel="sponsored nofollow noopener">Xem deal trên Shopee <span>↗</span></a>
+        <a href={`/deal-hot/${deal.id}`}>Xem chi tiết deal <span>→</span></a>
       </div>
     </article>
   );
 }
-

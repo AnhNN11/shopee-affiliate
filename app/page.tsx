@@ -43,7 +43,7 @@ export default function Home() {
         <div className="page-shell">
           <div className="section-title light"><div><span className="section-icon">⌘</span><p className="eyebrow">Duyệt theo nhu cầu</p><h2>Mỗi ngành, một cách chọn.</h2></div><Link href="/danh-muc">Xem toàn bộ <span>→</span></Link></div>
           <div className="home-category-grid">
-            {categories.map((category) => <Link href={`/deal-hot?q=${encodeURIComponent(category.name)}`} className={`category-tile ${category.tone}`} key={category.name}><span>{category.icon}</span><h3>{category.name}</h3><p>{category.copy}</p><b>{category.count} gợi ý</b></Link>)}
+            {categories.map((category) => <Link href={`/danh-muc/${category.id}`} className={`category-tile ${category.tone}`} key={category.name}><span>{category.icon}</span><h3>{category.name}</h3><p>{category.copy}</p><b>{category.count} gợi ý</b></Link>)}
           </div>
         </div>
       </section>

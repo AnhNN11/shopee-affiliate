@@ -30,9 +30,8 @@ export function CouponCard({ coupon }: { coupon: Coupon }) {
           <code>{coupon.code}</code>
           <button type="button" onClick={copyCode}>{copied ? 'Đã sao chép ✓' : 'Sao chép mã'}</button>
         </div>
-        <a className="voucher-link" href={coupon.url} target="_blank" rel="sponsored nofollow noopener">Dùng trên Shopee <span>↗</span></a>
+        <a className="voucher-link" href={`/ma-giam-gia/${coupon.id}`}>Xem chi tiết mã <span>→</span></a>
       </div>
     </article>
   );
 }
-

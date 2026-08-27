@@ -32,11 +32,11 @@ export type Deal = {
 };
 
 export const categories = [
-  { name: 'Công nghệ', icon: '⌁', count: 24, copy: 'Tai nghe, phụ kiện và góc làm việc', tone: 'blue' },
-  { name: 'Nhà cửa', icon: '⌂', count: 31, copy: 'Đồ bếp và vật dụng sống gọn', tone: 'green' },
-  { name: 'Làm đẹp', icon: '✦', count: 19, copy: 'Skincare và chăm sóc cá nhân', tone: 'pink' },
-  { name: 'Thời trang', icon: '♢', count: 27, copy: 'Trang phục và phụ kiện dễ phối', tone: 'yellow' },
-  { name: 'Mẹ & Bé', icon: '☻', count: 16, copy: 'Đồ dùng thiết thực cho gia đình', tone: 'purple' },
+  { id: 'cong-nghe', name: 'Công nghệ', icon: '⌁', count: 24, copy: 'Tai nghe, phụ kiện và góc làm việc', tone: 'blue' },
+  { id: 'nha-cua', name: 'Nhà cửa', icon: '⌂', count: 31, copy: 'Đồ bếp và vật dụng sống gọn', tone: 'green' },
+  { id: 'lam-dep', name: 'Làm đẹp', icon: '✦', count: 19, copy: 'Skincare và chăm sóc cá nhân', tone: 'pink' },
+  { id: 'thoi-trang', name: 'Thời trang', icon: '♢', count: 27, copy: 'Trang phục và phụ kiện dễ phối', tone: 'yellow' },
+  { id: 'me-va-be', name: 'Mẹ & Bé', icon: '☻', count: 16, copy: 'Đồ dùng thiết thực cho gia đình', tone: 'purple' },
 ];
 
 export const coupons: Coupon[] = [

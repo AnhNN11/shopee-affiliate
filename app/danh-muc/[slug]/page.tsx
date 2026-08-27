@@ -1,0 +1,58 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { CouponCard } from '@/app/components/coupon-card';
+import { DealCard } from '@/app/components/deal-card';
+import { categories, coupons, deals } from '@/app/lib/catalog';
+
+type Props = { params: Promise<{ slug: string }> };
+
+const categoryNotes: Record<string, { question: string; tips: string[] }> = {
+  'Công nghệ': { question: 'Thiết bị này giải quyết việc gì mỗi ngày?', tips: ['Ưu tiên tương thích trước cấu hình', 'So thời lượng pin trong điều kiện thực', 'Kiểm tra bảo hành và phụ kiện'] },
+  'Nhà cửa': { question: 'Món này có thật sự làm nhà gọn hơn?', tips: ['Đo kích thước không gian trước', 'Ưu tiên đồ dễ vệ sinh', 'Tính cả điện năng và phụ kiện thay thế'] },
+  'Làm đẹp': { question: 'Sản phẩm có hợp da và routine hiện tại?', tips: ['Đọc thành phần chính', 'Xem đánh giá từ người có loại da tương tự', 'Bắt đầu với dung tích nhỏ'] },
+  'Thời trang': { question: 'Bạn sẽ mặc món này ít nhất ba cách?', tips: ['Đọc số đo thay vì chỉ nhìn size', 'Xem ảnh thật và chất vải', 'Ưu tiên màu dễ phối đồ sẵn có'] },
+  'Mẹ & Bé': { question: 'Món này có an toàn và dễ dùng hằng ngày?', tips: ['Kiểm tra vật liệu và tiêu chuẩn', 'Ưu tiên thiết kế dễ làm sạch', 'Đọc kỹ độ tuổi và kích thước phù hợp'] },
+};
+
+export function generateStaticParams() {
+  return categories.map((category) => ({ slug: category.id }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const category = categories.find((item) => item.id === slug);
+  if (!category) return { title: 'Không tìm thấy danh mục — Chọn Chuẩn' };
+  const title = `Deal ${category.name} đáng cân nhắc — Chọn Chuẩn`;
+  const description = `${category.copy}. Xem deal, mã giảm giá và tiêu chí chọn theo nhu cầu.`;
+  return {
+    title,
+    description,
+    openGraph: { title, description, images: [] },
+    twitter: { card: 'summary', title, description, images: [] },
+  };
+}
+
+export default async function CategoryDetailPage({ params }: Props) {
+  const { slug } = await params;
+  const category = categories.find((item) => item.id === slug);
+  if (!category) notFound();
+  const categoryDeals = deals.filter((deal) => deal.category === category.name);
+  const categoryCoupons = coupons.filter((coupon) => coupon.badge === category.name || coupon.category === 'Toàn sàn').slice(0, 3);
+  const notes = categoryNotes[category.name];
+
+  return (
+    <main>
+      <div className="breadcrumbs page-shell"><Link href="/">Trang chủ</Link><span>›</span><Link href="/danh-muc">Danh mục</Link><span>›</span><strong>{category.name}</strong></div>
+      <section className={`category-detail-hero ${category.tone}`}>
+        <div className="page-shell"><div className="category-detail-icon">{category.icon}</div><div><p className="eyebrow">{category.count} gợi ý đang theo dõi</p><h1>{category.name}</h1><p>{category.copy}. Xem nhanh deal, mã phù hợp và bộ tiêu chí nên kiểm tra trước khi mua.</p></div></div>
+      </section>
+
+      <section className="category-guide page-shell"><div><p className="eyebrow">Câu hỏi mở đầu</p><h2>{notes.question}</h2></div><div className="category-tips">{notes.tips.map((tip, index) => <span key={tip}><b>0{index + 1}</b>{tip}</span>)}</div></section>
+
+      <section className="related-section page-shell"><div className="section-title"><div><p className="eyebrow">Deal trong danh mục</p><h2>Gợi ý {category.name}</h2></div><Link href={`/deal-hot?q=${encodeURIComponent(category.name)}`}>Tìm thêm <span>→</span></Link></div>{categoryDeals.length ? <div className="deal-grid">{categoryDeals.map((deal) => <DealCard key={deal.id} deal={deal} />)}</div> : <div className="empty-state"><span>⌁</span><h3>Đang bổ sung deal mới</h3><p>Danh mục này sẽ sớm có thêm gợi ý.</p></div>}</section>
+
+      <section className="category-coupons"><div className="page-shell"><div className="section-title"><div><p className="eyebrow">Mã có thể dùng cùng</p><h2>Kiểm tra mã trước khi chốt</h2></div><Link href="/ma-giam-gia">Kho mã <span>→</span></Link></div><div className="voucher-grid">{categoryCoupons.map((coupon) => <CouponCard key={coupon.id} coupon={coupon} />)}</div></div></section>
+    </main>
+  );
+}
