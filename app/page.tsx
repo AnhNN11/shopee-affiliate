@@ -1,262 +1,64 @@
-'use client';
-
-import { useMemo, useState } from 'react';
-
-const categories = ['Tất cả', 'Công nghệ', 'Nhà cửa', 'Làm đẹp'];
-
-const products = [
-  {
-    icon: '🎧',
-    label: 'Đáng tiền nhất',
-    category: 'Công nghệ',
-    name: 'Tai nghe Bluetooth pin lâu',
-    description: 'Ưu tiên âm thanh cân bằng, pin từ 24 giờ và đeo lâu không đau tai.',
-    price: 'Từ 249.000đ',
-    tone: 'peach',
-    url: 'https://shopee.vn/search?keyword=tai%20nghe%20bluetooth%20pin%20l%C3%A2u',
-  },
-  {
-    icon: '💻',
-    label: 'Góc làm việc',
-    category: 'Công nghệ',
-    name: 'Giá đỡ laptop công thái học',
-    description: 'Khung chắc, nâng vừa tầm mắt và gấp gọn được khi cần di chuyển.',
-    price: 'Từ 189.000đ',
-    tone: 'sky',
-    url: 'https://shopee.vn/search?keyword=gi%C3%A1%20%C4%91%E1%BB%A1%20laptop%20c%C3%B4ng%20th%C3%A1i%20h%E1%BB%8Dc',
-  },
-  {
-    icon: '🍳',
-    label: 'Bếp gọn hơn',
-    category: 'Nhà cửa',
-    name: 'Nồi chiên không dầu 5L',
-    description: 'Dung tích vừa cho gia đình nhỏ, dễ vệ sinh và không chiếm nhiều chỗ.',
-    price: 'Từ 899.000đ',
-    tone: 'mint',
-    url: 'https://shopee.vn/search?keyword=n%E1%BB%93i%20chi%C3%AAn%20kh%C3%B4ng%20d%E1%BA%A7u%205l',
-  },
-  {
-    icon: '🥤',
-    label: 'Mang đi mỗi ngày',
-    category: 'Nhà cửa',
-    name: 'Bình giữ nhiệt 600ml',
-    description: 'Miệng rộng dễ rửa, giữ lạnh tốt và nắp kín để yên tâm bỏ vào túi.',
-    price: 'Từ 129.000đ',
-    tone: 'yellow',
-    url: 'https://shopee.vn/search?keyword=b%C3%ACnh%20gi%E1%BB%AF%20nhi%E1%BB%87t%20600ml',
-  },
-  {
-    icon: '☀️',
-    label: 'Dùng mỗi ngày',
-    category: 'Làm đẹp',
-    name: 'Kem chống nắng dịu nhẹ',
-    description: 'Kết cấu mỏng, không bí da và phù hợp với khí hậu nóng ẩm.',
-    price: 'Từ 159.000đ',
-    tone: 'lavender',
-    url: 'https://shopee.vn/search?keyword=kem%20ch%E1%BB%91ng%20n%E1%BA%AFng%20d%E1%BB%8Bu%20nh%E1%BA%B9',
-  },
-  {
-    icon: '🧴',
-    label: 'Routine tối giản',
-    category: 'Làm đẹp',
-    name: 'Sữa rửa mặt da nhạy cảm',
-    description: 'Làm sạch vừa đủ, ít hương liệu và không khiến da bị căng sau khi rửa.',
-    price: 'Từ 119.000đ',
-    tone: 'rose',
-    url: 'https://shopee.vn/search?keyword=s%E1%BB%AFa%20r%E1%BB%ADa%20m%E1%BA%B7t%20da%20nh%E1%BA%A1y%20c%E1%BA%A3m',
-  },
-];
+import Link from 'next/link';
+import { CouponCard } from './components/coupon-card';
+import { DealCard } from './components/deal-card';
+import { categories, coupons, deals } from './lib/catalog';
 
 export default function Home() {
-  const [activeCategory, setActiveCategory] = useState('Tất cả');
-  const [query, setQuery] = useState('');
-
-  const filteredProducts = useMemo(() => {
-    const keyword = query.trim().toLocaleLowerCase('vi');
-    return products.filter((product) => {
-      const categoryMatches = activeCategory === 'Tất cả' || product.category === activeCategory;
-      const textMatches = !keyword || `${product.name} ${product.description} ${product.category}`.toLocaleLowerCase('vi').includes(keyword);
-      return categoryMatches && textMatches;
-    });
-  }, [activeCategory, query]);
-
   return (
     <main>
-      <header className="site-header">
-        <a className="brand" href="#top" aria-label="Chọn Chuẩn - Trang chủ">
-          <span className="brand-mark">C</span>
-          <span>CHỌN CHUẨN</span>
-        </a>
-        <nav aria-label="Điều hướng chính">
-          <a href="#ma-giam-gia">Mã giảm giá</a>
-          <a href="#goi-y">Deal đa ngành</a>
-          <a href="#cach-chon">Cách chọn</a>
-        </nav>
-        <a className="header-cta" href="#goi-y">Săn deal ngay</a>
-      </header>
-
-      <section className="hero" id="top">
+      <section className="home-hero">
         <div className="hero-copy">
-          <p className="eyebrow">Mã mới · Deal thật · Chọn nhanh</p>
-          <h1>Deal đa ngành,<br />đã có người lọc hộ.</h1>
-          <p className="hero-text">
-            Một nơi để tìm mã giảm giá, sản phẩm đáng tiền và hướng dẫn mua sắm
-            theo đúng nhu cầu của bạn.
-          </p>
-          <div className="hero-actions">
-            <a className="primary-button" href="#ma-giam-gia">Xem mã hôm nay</a>
-            <a className="text-link" href="#cach-chon">Xem cách chúng tôi chọn <span>→</span></a>
-          </div>
-          <div className="trust-row" aria-label="Cam kết nội dung">
-            <span>✓ So sánh rõ ràng</span>
-            <span>✓ Không tô hồng</span>
-            <span>✓ Cập nhật giá thường xuyên</span>
-          </div>
-        </div>
-
-        <div className="hero-visual" aria-label="Tuyển chọn sản phẩm nổi bật">
-          <div className="orbit orbit-one" />
-          <div className="orbit orbit-two" />
-          <div className="hero-card hero-card-main">
-            <span className="card-sticker">HỢP TÚI TIỀN</span>
-            <span className="hero-emoji">🎧</span>
-            <div>
-              <strong>Tai nghe Bluetooth</strong>
-              <small>4 lựa chọn đáng cân nhắc</small>
-            </div>
-          </div>
-          <div className="hero-card hero-card-small top-card"><span>⭐</span><strong>4.8/5</strong><small>đánh giá tốt</small></div>
-          <div className="hero-card hero-card-small bottom-card"><span>↘</span><strong>-31%</strong><small>giá đang tốt</small></div>
-        </div>
-      </section>
-
-      <section className="proof-strip" aria-label="Nguyên tắc chọn sản phẩm">
-        <span><strong>01</strong> Mã được ghi rõ điều kiện</span>
-        <span><strong>02</strong> Deal chia theo từng ngành</span>
-        <span><strong>03</strong> Giá và hạn dùng minh bạch</span>
-      </section>
-
-      <section className="coupon-section" id="ma-giam-gia">
-        <div className="section-heading coupon-heading">
-          <div>
-            <p className="eyebrow">Bản thử nghiệm</p>
-            <h2>Mã giảm giá nổi bật.</h2>
-          </div>
-          <p>Dữ liệu dưới đây là nội dung minh họa. Khi vận hành thật, mã sẽ được thay bằng ưu đãi còn hiệu lực từ hệ thống Shopee.</p>
-        </div>
-        <div className="coupon-grid">
-          <article className="coupon-card">
-            <div className="coupon-value"><span>ĐẾN</span><strong>₫50K</strong></div>
-            <div className="coupon-copy"><span className="coupon-tag">Toàn ngành hàng</span><h3>Voucher mua sắm</h3><p>Đơn tối thiểu và thời hạn sẽ hiển thị rõ tại đây.</p><a href="#goi-y">Xem deal phù hợp <span>→</span></a></div>
-          </article>
-          <article className="coupon-card">
-            <div className="coupon-value"><span>ƯU ĐÃI</span><strong>FREESHIP</strong></div>
-            <div className="coupon-copy"><span className="coupon-tag">Vận chuyển</span><h3>Mã hỗ trợ phí ship</h3><p>Lọc theo giá trị đơn và khu vực áp dụng.</p><a href="#goi-y">Xem deal phù hợp <span>→</span></a></div>
-          </article>
-          <article className="coupon-card">
-            <div className="coupon-value"><span>THÊM</span><strong>SHOP</strong></div>
-            <div className="coupon-copy"><span className="coupon-tag">Voucher người bán</span><h3>Ưu đãi riêng của shop</h3><p>Kết hợp cùng sản phẩm đang có mức giá tốt.</p><a href="#goi-y">Xem deal phù hợp <span>→</span></a></div>
-          </article>
-        </div>
-      </section>
-
-      <section className="featured" id="goi-y">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Deal đa ngành</p>
-            <h2>Tìm nhanh theo đúng nhu cầu.</h2>
-          </div>
-          <p>Mỗi lựa chọn đều có lý do, tiêu chí cần kiểm tra và khoảng giá tham khảo.</p>
-        </div>
-
-        <div className="discovery-bar">
-          <label className="search-field">
+          <span className="hero-kicker"><b>🔥 HOT</b> Deal đa ngành được lọc mỗi ngày</span>
+          <h1>Tìm đúng mã.<br /><em>Chốt đúng deal.</em></h1>
+          <p>Trang tổng hợp giúp bạn đi thẳng tới mã giảm giá, deal đang hot và danh mục cần mua — không phải lạc trong hàng trăm sản phẩm.</p>
+          <form className="hero-search" action="/deal-hot">
             <span aria-hidden="true">⌕</span>
-            <span className="sr-only">Tìm sản phẩm</span>
-            <input
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Tìm tai nghe, đồ bếp, skincare..."
-            />
-          </label>
-          <div className="category-tabs" aria-label="Lọc theo danh mục">
-            {categories.map((category) => (
-              <button
-                type="button"
-                key={category}
-                className={activeCategory === category ? 'active' : ''}
-                onClick={() => setActiveCategory(category)}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-          <span className="result-count">{filteredProducts.length} gợi ý</span>
+            <input type="search" name="q" aria-label="Tìm sản phẩm hoặc mã giảm giá" placeholder="Tìm tai nghe, freeship, skincare..." />
+            <button type="submit">Tìm ngay</button>
+          </form>
+          <div className="popular-searches"><span>Tìm nhiều:</span><Link href="/deal-hot?q=tai+nghe">Tai nghe</Link><Link href="/ma-giam-gia">Freeship</Link><Link href="/deal-hot?q=nồi+chiên">Nồi chiên</Link></div>
         </div>
-
-        {filteredProducts.length > 0 ? (
-          <div className="product-grid">
-            {filteredProducts.map((product) => (
-              <article className="product-card" key={product.name}>
-                <div className={`product-visual ${product.tone}`}>
-                  <span className="product-label">{product.label}</span>
-                  <span className="product-emoji">{product.icon}</span>
-                </div>
-                <div className="product-content">
-                  <p className="product-category">{product.category}</p>
-                  <h3>{product.name}</h3>
-                  <p>{product.description}</p>
-                  <div className="product-footer">
-                    <strong>{product.price}</strong>
-                    <a
-                      href={product.url}
-                      target="_blank"
-                      rel="sponsored nofollow noopener"
-                      aria-label={`Xem ${product.name} trên Shopee`}
-                    >
-                      Xem trên Shopee <span>↗</span>
-                    </a>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <div className="empty-state">
-            <span>🔎</span>
-            <h3>Chưa có gợi ý phù hợp</h3>
-            <p>Thử từ khóa khác hoặc chọn lại “Tất cả”.</p>
-          </div>
-        )}
-        <p className="price-note">Giá hiển thị là mức tham khảo và có thể thay đổi. Luôn kiểm tra giá, đánh giá và chính sách của shop trước khi đặt hàng.</p>
-      </section>
-
-      <section className="method" id="cach-chon">
-        <div className="method-intro">
-          <p className="eyebrow">Cách Chọn Chuẩn hoạt động</p>
-          <h2>Không chỉ là một danh sách link.</h2>
-          <p>Chúng tôi gom nhu cầu thật, so sánh tiêu chí quan trọng và chỉ đề xuất những lựa chọn có lý do rõ ràng.</p>
-        </div>
-        <div className="steps-grid">
-          <article><span>01</span><h3>Hiểu nhu cầu</h3><p>Ngân sách bao nhiêu, dùng ở đâu và tính năng nào thật sự quan trọng?</p></article>
-          <article><span>02</span><h3>Lập danh sách ngắn</h3><p>Loại bớt những món thông số đẹp nhưng không giải quyết đúng nhu cầu.</p></article>
-          <article><span>03</span><h3>Kiểm tra lần cuối</h3><p>Đối chiếu giá, đánh giá gần đây, bảo hành và uy tín của người bán.</p></article>
+        <div className="hero-dashboard" aria-label="Tổng quan ưu đãi hôm nay">
+          <div className="dashboard-top"><span>Ưu đãi hôm nay</span><b>LIVE</b></div>
+          <div className="big-deal"><span className="fire-icon">🔥</span><div><small>DEAL NỔI BẬT</small><strong>-35%</strong><p>Bình giữ nhiệt 600ml</p></div></div>
+          <div className="dashboard-stats"><div><strong>08</strong><span>Mã mới</span></div><div><strong>24</strong><span>Deal hot</span></div><div><strong>05</strong><span>Danh mục</span></div></div>
+          <div className="mini-voucher"><span>🎟</span><div><strong>FREESHIP50</strong><small>Hỗ trợ phí vận chuyển</small></div><span className="arrow-chip">→</span></div>
         </div>
       </section>
 
-      <section className="closing-cta">
-        <p className="eyebrow">Một lựa chọn tốt bắt đầu từ câu hỏi đúng</p>
-        <h2>Bạn đang định mua món gì?</h2>
-        <p>Tìm nhanh trong các gợi ý đã được sắp theo nhu cầu và khoảng giá.</p>
-        <a className="primary-button" href="#goi-y">Bắt đầu tìm sản phẩm</a>
+      <section className="shortcut-section page-shell">
+        <div className="shortcut-grid">
+          <Link href="/ma-giam-gia" className="shortcut-card voucher-shortcut"><span className="shortcut-icon">🎟</span><div><small>KHO MÃ</small><h2>Mã giảm giá</h2><p>Tìm, lọc và sao chép mã nhanh.</p></div><b>08 mã →</b></Link>
+          <Link href="/deal-hot" className="shortcut-card hot-shortcut"><span className="shortcut-icon">🔥</span><div><small>ĐANG TĂNG NHIỆT</small><h2>Deal hot</h2><p>Sản phẩm giá tốt theo từng ngành.</p></div><b>Xem deal →</b></Link>
+          <Link href="/danh-muc" className="shortcut-card category-shortcut"><span className="shortcut-icon">⌘</span><div><small>CHỌN NHANH</small><h2>Danh mục</h2><p>Đi thẳng tới đúng nhóm bạn cần.</p></div><b>5 ngành →</b></Link>
+        </div>
       </section>
 
-      <footer id="gioi-thieu">
-        <div className="brand footer-brand"><span className="brand-mark">C</span><span>CHỌN CHUẨN</span></div>
-        <p>Minh bạch Affiliate: Chọn Chuẩn có thể nhận hoa hồng khi bạn mua hàng qua liên kết giới thiệu. Bạn không phải trả thêm chi phí. Đây là website độc lập, không phải trang chính thức của Shopee.</p>
-        <span>© 2026 Chọn Chuẩn</span>
-      </footer>
+      <section className="home-section page-shell">
+        <div className="section-title"><div><span className="section-icon hot">🔥</span><p className="eyebrow">Lấy mã trước khi mua</p><h2>Mã đáng chú ý hôm nay</h2></div><Link href="/ma-giam-gia">Xem tất cả mã <span>→</span></Link></div>
+        <div className="voucher-grid compact">{coupons.slice(0, 3).map((coupon) => <CouponCard key={coupon.id} coupon={coupon} />)}</div>
+      </section>
+
+      <section className="category-band">
+        <div className="page-shell">
+          <div className="section-title light"><div><span className="section-icon">⌘</span><p className="eyebrow">Duyệt theo nhu cầu</p><h2>Mỗi ngành, một cách chọn.</h2></div><Link href="/danh-muc">Xem toàn bộ <span>→</span></Link></div>
+          <div className="home-category-grid">
+            {categories.map((category) => <Link href={`/deal-hot?q=${encodeURIComponent(category.name)}`} className={`category-tile ${category.tone}`} key={category.name}><span>{category.icon}</span><h3>{category.name}</h3><p>{category.copy}</p><b>{category.count} gợi ý</b></Link>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="home-section page-shell">
+        <div className="section-title"><div><span className="section-icon sale">%</span><p className="eyebrow">Sale off có chọn lọc</p><h2>Deal đang được quan tâm</h2></div><Link href="/deal-hot">Xem toàn bộ deal <span>→</span></Link></div>
+        <div className="deal-grid home-deals">{deals.slice(0, 4).map((deal) => <DealCard key={deal.id} deal={deal} />)}</div>
+      </section>
+
+      <section className="editorial-section page-shell">
+        <article className="editorial-lead"><span className="eyebrow">Cách Chọn Chuẩn hoạt động</span><h2>Không chỉ gom link.<br />Chúng tôi gom lý do để chọn.</h2><p>So sánh nhu cầu, khoảng giá, đánh giá gần đây và uy tín người bán trước khi gợi ý.</p><Link className="primary-button" href="/cach-chon">Xem quy trình chọn</Link></article>
+        <div className="editorial-points"><div><span>01</span><h3>Hiểu nhu cầu</h3><p>Mua để làm gì và tiêu chí nào thật sự quan trọng?</p></div><div><span>02</span><h3>Loại nhiễu</h3><p>Bỏ bớt sản phẩm thông số đẹp nhưng không đúng việc.</p></div><div><span>03</span><h3>Kiểm tra lần cuối</h3><p>Đối chiếu giá, shop, bảo hành và đánh giá mới.</p></div></div>
+      </section>
+
+      <section className="demo-disclosure page-shell"><span>i</span><p><strong>Lưu ý bản thử nghiệm:</strong> mã, mức giảm và giá hiện là dữ liệu minh họa để kiểm tra website. Trước khi mua, hãy xác nhận điều kiện và giá cuối cùng trên Shopee.</p></section>
     </main>
   );
 }
