@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 const navItems = [
@@ -23,8 +24,16 @@ export function SiteHeader() {
       <header className="commerce-header">
         <div className="header-main page-shell">
           <Link className="brand commerce-brand" href="/" aria-label="Chọn Chuẩn - Trang chủ">
-            <span className="brand-mark">C</span>
-            <span>CHỌN CHUẨN</span>
+            <Image
+              className="brand-logo"
+              src="/chon-chuan-logo-v2.svg"
+              width={150}
+              height={32}
+              alt=""
+              aria-hidden="true"
+              unoptimized
+              loading="eager"
+            />
           </Link>
 
           <form className="header-search" action="/deal-hot" role="search">

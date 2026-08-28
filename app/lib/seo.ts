@@ -3,21 +3,22 @@ import type { Metadata } from 'next';
 export const SITE_NAME = 'Chọn Chuẩn';
 export const SITE_DESCRIPTION =
   'Gợi ý deal, mã giảm giá và hướng dẫn mua sắm có chọn lọc, giúp bạn kiểm tra giá và điều kiện trước khi quyết định.';
+export const PRODUCTION_SITE_URL = 'https://chonchuan.dolphinxstudio.com';
+export const SOCIAL_IMAGE_PATH = '/chon-chuan-social.png';
+export const SOCIAL_IMAGE_ALT = 'Chọn Chuẩn — Mã mới, deal thật, chọn nhanh';
 
-function readSiteUrl(): string | null {
-  const value = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-
-  if (!value) return null;
+function readSiteUrl(): string {
+  const value = process.env.NEXT_PUBLIC_SITE_URL?.trim() || PRODUCTION_SITE_URL;
 
   try {
     const url = new URL(value);
-    if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') return PRODUCTION_SITE_URL;
 
     url.hash = '';
     url.search = '';
     return url.toString().replace(/\/+$/, '');
   } catch {
-    return null;
+    return PRODUCTION_SITE_URL;
   }
 }
 
@@ -28,6 +29,15 @@ export function absoluteSiteUrl(path = '/'): string | undefined {
 
   const normalizedPath = path === '/' ? '' : `/${path.replace(/^\/+/, '')}`;
   return `${SITE_URL}${normalizedPath}`;
+}
+
+export function createSocialImageMetadata() {
+  return {
+    url: absoluteSiteUrl(SOCIAL_IMAGE_PATH) ?? SOCIAL_IMAGE_PATH,
+    width: 1200,
+    height: 630,
+    alt: SOCIAL_IMAGE_ALT,
+  };
 }
 
 type PageMetadataOptions = {
@@ -56,12 +66,14 @@ export function createPageMetadata({
       siteName: SITE_NAME,
       locale: 'vi_VN',
       type: 'website',
+      images: [createSocialImageMetadata()],
       ...(canonical ? { url: canonical } : {}),
     },
     twitter: {
       card: 'summary_large_image',
       title: socialTitle,
       description,
+      images: [createSocialImageMetadata()],
     },
     robots: index
       ? {

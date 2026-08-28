@@ -440,6 +440,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .commerce-header { position: sticky; top: 0; z-index: 40; border-bottom: 1px solid var(--line); background: rgba(255, 255, 255, .96); box-shadow: 0 6px 24px rgba(64, 35, 26, .055); backdrop-filter: blur(18px); }
 .header-main { min-height: 78px; display: grid; grid-template-columns: auto minmax(300px, 1fr) auto; align-items: center; gap: 28px; }
 .commerce-brand { gap: 11px; font-size: 15px; letter-spacing: -.035em; }
+.brand-logo { width: 150px; height: auto; display: block; flex: 0 0 auto; }
+.commerce-brand, .footer-brand { width: 150px; min-width: 150px; }
 .commerce-brand .brand-mark, .footer-brand .brand-mark { width: 38px; height: 38px; border-radius: 12px 12px 12px 4px; background: var(--orange); color: white; box-shadow: 0 7px 16px rgba(238, 77, 45, .22); }
 .header-search { height: 46px; display: grid; grid-template-columns: minmax(0, 1fr) auto; overflow: hidden; border: 2px solid var(--orange); border-radius: 9px; background: white; box-shadow: 0 6px 20px rgba(238, 77, 45, .08); }
 .header-search:focus-within { border-color: var(--orange-dark); box-shadow: 0 0 0 4px rgba(238, 77, 45, .11); }
@@ -679,7 +681,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .announcement-inner { justify-content: center; }
   .announcement-item:last-child { display: none; }
   .header-main { min-height: 109px; padding-block: 9px; }
-  .commerce-brand { font-size: 13px; }
+  .commerce-brand { width: 132px; min-width: 132px; font-size: 13px; }
+  .commerce-brand .brand-logo { width: 132px; }
   .commerce-brand .brand-mark { width: 34px; height: 34px; }
   .header-action { min-height: 36px; padding: 3px; }
   .header-action:first-child { display: none; }

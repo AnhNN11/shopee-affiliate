@@ -1,10 +1,17 @@
 import type { Metadata } from 'next';
 import { SiteFooter } from './components/site-footer';
 import { SiteHeader } from './components/site-header';
-import { absoluteSiteUrl, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from './lib/seo';
+import {
+  absoluteSiteUrl,
+  createSocialImageMetadata,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+} from './lib/seo';
 import './globals.css';
 
 const homeUrl = absoluteSiteUrl('/');
+const logoUrl = absoluteSiteUrl('/chon-chuan-mark-512.png');
 const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
 
 export const metadata: Metadata = {
@@ -27,12 +34,14 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     locale: 'vi_VN',
     type: 'website',
+    images: [createSocialImageMetadata()],
     ...(homeUrl ? { url: homeUrl } : {}),
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Chọn Chuẩn — Deal tốt & mã giảm giá Shopee',
     description: SITE_DESCRIPTION,
+    images: [createSocialImageMetadata()],
   },
   robots: {
     index: true,
@@ -57,6 +66,16 @@ const structuredData = homeUrl
           '@id': `${homeUrl}/#organization`,
           name: SITE_NAME,
           url: homeUrl,
+          logo: logoUrl
+            ? {
+                '@type': 'ImageObject',
+                url: logoUrl,
+                contentUrl: logoUrl,
+                width: 512,
+                height: 512,
+                caption: `Biểu tượng ${SITE_NAME}`,
+              }
+            : undefined,
         },
         {
           '@type': 'WebSite',

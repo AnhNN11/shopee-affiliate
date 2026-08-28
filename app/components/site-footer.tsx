@@ -1,10 +1,21 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 export function SiteFooter() {
   return (
     <footer className="site-footer">
       <div>
-        <Link className="brand footer-brand" href="/"><span className="brand-mark">C</span><span>CHỌN CHUẨN</span></Link>
+        <Link className="brand footer-brand" href="/" aria-label="Chọn Chuẩn - Trang chủ">
+          <Image
+            className="brand-logo"
+            src="/chon-chuan-logo-v2.svg"
+            width={150}
+            height={32}
+            alt=""
+            aria-hidden="true"
+            unoptimized
+          />
+        </Link>
         <p className="footer-note">Mã dễ tìm, deal dễ chọn, điều kiện dễ hiểu.</p>
       </div>
       <div className="footer-links">
@@ -18,4 +29,3 @@ export function SiteFooter() {
     </footer>
   );
 }
-
