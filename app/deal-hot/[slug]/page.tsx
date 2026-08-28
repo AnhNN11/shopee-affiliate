@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DealCard } from '@/app/components/deal-card';
 import { deals } from '@/app/lib/catalog';
-import { createNotFoundMetadata, createPageMetadata } from '@/app/lib/seo';
+import { absoluteSiteUrl, createNotFoundMetadata, createPageMetadata } from '@/app/lib/seo';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -50,25 +51,53 @@ export default async function DealDetailPage({ params }: Props) {
   const { slug } = await params;
   const deal = deals.find((item) => item.id === slug);
   if (!deal) notFound();
-  const related = deals.filter((item) => item.category === deal.category && item.id !== deal.id).slice(0, 3);
+  const sameCategory = deals.filter((item) => item.category === deal.category && item.id !== deal.id);
+  const related = [...sameCategory, ...deals.filter((item) => item.category !== deal.category && item.id !== deal.id)].slice(0, 3);
   const notes = advice[deal.category] ?? advice['Công nghệ'];
+  const productUrl = absoluteSiteUrl(`/deal-hot/${deal.id}`);
+  const imageUrl = absoluteSiteUrl(deal.image);
+  const productStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: deal.name,
+    description: deal.description,
+    image: imageUrl ? [imageUrl] : undefined,
+    sku: deal.model,
+    model: deal.model,
+    brand: { '@type': 'Brand', name: deal.brand },
+    category: deal.category,
+    url: productUrl,
+  };
 
   return (
     <main>
-      <div className="breadcrumbs page-shell"><Link href="/">Trang chủ</Link><span>›</span><Link href="/deal-hot">Deal hot</Link><span>›</span><strong>{deal.name}</strong></div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(productStructuredData).replace(/</g, '\\u003c'),
+        }}
+      />
+      <nav className="breadcrumbs page-shell" aria-label="Đường dẫn"><Link href="/">Trang chủ</Link><span>›</span><Link href="/deal-hot">Deal đã lọc</Link><span>›</span><strong>{deal.name}</strong></nav>
       <section className="deal-detail page-shell">
         <div className={`detail-visual ${deal.tone}`}>
-          <span className={`status-badge ${deal.kind}`}>{deal.kind === 'hot' ? '🔥 ' : deal.kind === 'sale' ? '⚡ ' : '🎟 '}{deal.badge}</span>
+          <span className={`status-badge ${deal.kind}`}>{deal.badge}</span>
           <span className="detail-discount">{deal.discount}</span>
-          <span className="detail-emoji">{deal.icon}</span>
-          <small>Hình ảnh minh họa sản phẩm</small>
+          <Image
+            className="detail-product-photo"
+            src={deal.image}
+            alt={deal.imageAlt}
+            fill
+            sizes="(max-width: 800px) 100vw, 50vw"
+          />
+          <small>Ảnh sản phẩm từ {deal.brand}</small>
         </div>
         <div className="detail-summary">
           <p className="eyebrow">{deal.category} · Deal đã lọc</p>
           <h1>{deal.name}</h1>
-          <div className="detail-rating"><span>★ {deal.rating}</span><span>{deal.sold} lượt bán tham khảo</span><span>Mã SP: {deal.id}</span></div>
+          <div className="detail-rating"><span>{deal.brand}</span><span>Model {deal.model}</span><span>Giá có thể thay đổi</span></div>
           <p className="detail-description">{deal.description}</p>
-          <div className="detail-price-row"><strong>{deal.price}</strong><del>{deal.oldPrice}</del><span>Tiết kiệm {deal.discount}</span></div>
+          <a className="brand-source-link" href={deal.sourceUrl} target="_blank" rel="noopener noreferrer">Xem thông tin chính thức từ {deal.brand} <span aria-hidden="true">↗</span></a>
+          <div className="detail-price-row"><strong>{deal.price}</strong><del>{deal.oldPrice}</del><span>Giảm {deal.discount.replace('-', '')}</span></div>
           <div className="mini-checks"><span>✓ Có lý do lựa chọn</span><span>✓ Kiểm tra shop trước khi mua</span><span>✓ Giá có thể thay đổi</span></div>
           <a className="shopee-button" href={deal.url} target="_blank" rel="sponsored nofollow noopener noreferrer">Tìm sản phẩm tương tự trên Shopee <span>↗</span></a>
           <p className="affiliate-inline">Liên kết trên có thể là liên kết tiếp thị. Bạn không phải trả thêm chi phí.</p>
@@ -80,7 +109,7 @@ export default async function DealDetailPage({ params }: Props) {
         <article><span className="decision-icon warning">!</span><h2>Cần kiểm tra trước khi chốt</h2><ul>{notes.checks.map((item) => <li key={item}>{item}</li>)}</ul></article>
       </section>
 
-      <section className="detail-facts page-shell"><div><small>Giá tham khảo</small><strong>{deal.price}</strong></div><div><small>Đánh giá</small><strong>★ {deal.rating}/5</strong></div><div><small>Đã bán</small><strong>{deal.sold}</strong></div><div><small>Danh mục</small><strong>{deal.category}</strong></div></section>
+      <section className="detail-facts page-shell"><div><small>Giá tham khảo</small><strong>{deal.price}</strong></div><div><small>Thương hiệu</small><strong>{deal.brand}</strong></div><div><small>Model</small><strong>{deal.model}</strong></div><div><small>Danh mục</small><strong>{deal.category}</strong></div></section>
 
       {related.length > 0 && <section className="related-section page-shell"><div className="section-title"><div><p className="eyebrow">Xem thêm cùng ngành</p><h2>Có thể bạn cũng cần</h2></div><Link href="/deal-hot">Tất cả deal <span>→</span></Link></div><div className="deal-grid">{related.map((item) => <DealCard key={item.id} deal={item} />)}</div></section>}
     </main>

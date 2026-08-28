@@ -16,27 +16,30 @@ export type Coupon = {
 
 export type Deal = {
   id: string;
-  icon: string;
   badge: string;
   kind: CouponKind;
   category: string;
+  brand: string;
+  model: string;
   name: string;
   description: string;
+  image: string;
+  imageAlt: string;
+  sourceUrl: string;
   price: string;
   oldPrice: string;
   discount: string;
-  rating: string;
-  sold: string;
+  popularity: number;
   tone: string;
   url: string;
 };
 
 export const categories = [
-  { id: 'cong-nghe', name: 'Công nghệ', icon: '⌁', count: 24, copy: 'Tai nghe, phụ kiện và góc làm việc', tone: 'blue' },
-  { id: 'nha-cua', name: 'Nhà cửa', icon: '⌂', count: 31, copy: 'Đồ bếp và vật dụng sống gọn', tone: 'green' },
-  { id: 'lam-dep', name: 'Làm đẹp', icon: '✦', count: 19, copy: 'Skincare và chăm sóc cá nhân', tone: 'pink' },
-  { id: 'thoi-trang', name: 'Thời trang', icon: '♢', count: 27, copy: 'Trang phục và phụ kiện dễ phối', tone: 'yellow' },
-  { id: 'me-va-be', name: 'Mẹ & Bé', icon: '☻', count: 16, copy: 'Đồ dùng thiết thực cho gia đình', tone: 'purple' },
+  { id: 'cong-nghe', name: 'Công nghệ', icon: '01', count: 2, copy: 'Tai nghe, phụ kiện và góc làm việc', tone: 'blue' },
+  { id: 'nha-cua', name: 'Nhà cửa', icon: '02', count: 2, copy: 'Đồ bếp và vật dụng sống gọn', tone: 'green' },
+  { id: 'lam-dep', name: 'Làm đẹp', icon: '03', count: 2, copy: 'Skincare và chăm sóc cá nhân', tone: 'pink' },
+  { id: 'thoi-trang', name: 'Thời trang', icon: '04', count: 1, copy: 'Trang phục và phụ kiện dễ phối', tone: 'yellow' },
+  { id: 'me-va-be', name: 'Mẹ & Bé', icon: '05', count: 1, copy: 'Đồ dùng thiết thực cho gia đình', tone: 'purple' },
 ];
 
 export const coupons: Coupon[] = [
@@ -51,12 +54,156 @@ export const coupons: Coupon[] = [
 ];
 
 export const deals: Deal[] = [
-  { id: 'tai-nghe-bluetooth', icon: '🎧', badge: 'Bán chạy', kind: 'hot', category: 'Công nghệ', name: 'Tai nghe Bluetooth pin lâu', description: 'Pin từ 24 giờ, âm thanh cân bằng và thiết kế đeo lâu không đau tai.', price: '249.000đ', oldPrice: '359.000đ', discount: '-31%', rating: '4.8', sold: '8,2k', tone: 'peach', url: 'https://shopee.vn/search?keyword=tai%20nghe%20bluetooth%20pin%20l%C3%A2u' },
-  { id: 'gia-do-laptop', icon: '💻', badge: 'Góc làm việc', kind: 'voucher', category: 'Công nghệ', name: 'Giá đỡ laptop công thái học', description: 'Khung chắc, nâng vừa tầm mắt và gấp gọn khi cần di chuyển.', price: '189.000đ', oldPrice: '269.000đ', discount: '-30%', rating: '4.9', sold: '3,6k', tone: 'sky', url: 'https://shopee.vn/search?keyword=gi%C3%A1%20%C4%91%E1%BB%A1%20laptop' },
-  { id: 'noi-chien', icon: '🍳', badge: 'Sale off', kind: 'sale', category: 'Nhà cửa', name: 'Nồi chiên không dầu 5L', description: 'Dung tích vừa cho gia đình nhỏ, dễ vệ sinh và không chiếm nhiều chỗ.', price: '899.000đ', oldPrice: '1.290.000đ', discount: '-30%', rating: '4.8', sold: '12k', tone: 'mint', url: 'https://shopee.vn/search?keyword=n%E1%BB%93i%20chi%C3%AAn%20kh%C3%B4ng%20d%E1%BA%A7u%205l' },
-  { id: 'binh-giu-nhiet', icon: '🥤', badge: 'Giá tốt', kind: 'hot', category: 'Nhà cửa', name: 'Bình giữ nhiệt 600ml', description: 'Miệng rộng dễ rửa, giữ lạnh tốt và nắp kín để bỏ vào túi.', price: '129.000đ', oldPrice: '199.000đ', discount: '-35%', rating: '4.9', sold: '22k', tone: 'yellow', url: 'https://shopee.vn/search?keyword=b%C3%ACnh%20gi%E1%BB%AF%20nhi%E1%BB%87t%20600ml' },
-  { id: 'kem-chong-nang', icon: '☀️', badge: 'Hot beauty', kind: 'hot', category: 'Làm đẹp', name: 'Kem chống nắng dịu nhẹ', description: 'Kết cấu mỏng, không bí da và phù hợp với khí hậu nóng ẩm.', price: '159.000đ', oldPrice: '239.000đ', discount: '-33%', rating: '4.8', sold: '18k', tone: 'lavender', url: 'https://shopee.vn/search?keyword=kem%20ch%E1%BB%91ng%20n%E1%BA%AFng%20d%E1%BB%8Bu%20nh%E1%BA%B9' },
-  { id: 'sua-rua-mat', icon: '🧴', badge: 'Routine gọn', kind: 'voucher', category: 'Làm đẹp', name: 'Sữa rửa mặt da nhạy cảm', description: 'Làm sạch vừa đủ, ít hương liệu và không gây căng da sau khi rửa.', price: '119.000đ', oldPrice: '169.000đ', discount: '-30%', rating: '4.9', sold: '9,5k', tone: 'rose', url: 'https://shopee.vn/search?keyword=s%E1%BB%AFa%20r%E1%BB%ADa%20m%E1%BA%B7t%20da%20nh%E1%BA%A1y%20c%E1%BA%A3m' },
-  { id: 'ao-thun', icon: '👕', badge: 'Dễ phối', kind: 'sale', category: 'Thời trang', name: 'Áo thun cotton form rộng', description: 'Vải dày vừa, phom dễ mặc và bảng màu trung tính dùng hằng ngày.', price: '139.000đ', oldPrice: '219.000đ', discount: '-37%', rating: '4.7', sold: '15k', tone: 'blue', url: 'https://shopee.vn/search?keyword=%C3%A1o%20thun%20cotton%20form%20r%E1%BB%99ng' },
-  { id: 'tui-bim', icon: '🧸', badge: 'Mẹ chọn', kind: 'voucher', category: 'Mẹ & Bé', name: 'Túi đựng đồ cho bé đa ngăn', description: 'Chia ngăn rõ, chống thấm nhẹ và đủ gọn để mang đi hằng ngày.', price: '219.000đ', oldPrice: '329.000đ', discount: '-33%', rating: '4.9', sold: '4,2k', tone: 'purple', url: 'https://shopee.vn/search?keyword=t%C3%BAi%20%C4%91%E1%BB%B1ng%20%C4%91%E1%BB%93%20cho%20b%C3%A9' },
+  {
+    id: 'tai-nghe-bluetooth',
+    badge: 'Chống ồn',
+    kind: 'hot',
+    category: 'Công nghệ',
+    brand: 'soundcore',
+    model: 'Space One A3035',
+    name: 'Tai nghe soundcore Space One',
+    description: 'Chống ồn thích ứng, driver 40 mm và thời lượng pin tới 55 giờ khi tắt ANC.',
+    image: '/products/soundcore-space-one.png',
+    imageAlt: 'Tai nghe chụp tai Bluetooth soundcore Space One màu đen',
+    sourceUrl: 'https://www.soundcore.com/products/space-one-a3035011?variant=44247740022974',
+    price: '1.890.000đ',
+    oldPrice: '2.490.000đ',
+    discount: '-24%',
+    popularity: 8,
+    tone: 'peach',
+    url: 'https://shopee.vn/search?keyword=soundcore%20Space%20One%20A3035',
+  },
+  {
+    id: 'gia-do-laptop',
+    badge: 'Góc làm việc',
+    kind: 'voucher',
+    category: 'Công nghệ',
+    brand: 'UGREEN',
+    model: '15925',
+    name: 'Giá đỡ laptop UGREEN 15925',
+    description: 'Khung nhôm hai trục, điều chỉnh độ cao và góc nhìn, có thể gập gọn khi di chuyển.',
+    image: '/products/ugreen-laptop-stand.png',
+    imageAlt: 'Giá đỡ laptop công thái học UGREEN bằng nhôm, gập gọn và điều chỉnh độ cao',
+    sourceUrl: 'https://uk.ugreen.com/collections/laptop-and-tablet-stand/products/ugreen-foldable-dual-rod-laptop-stand',
+    price: '699.000đ',
+    oldPrice: '999.000đ',
+    discount: '-30%',
+    popularity: 6,
+    tone: 'sky',
+    url: 'https://shopee.vn/search?keyword=UGREEN%2015925',
+  },
+  {
+    id: 'noi-chien',
+    badge: 'Bếp gọn',
+    kind: 'sale',
+    category: 'Nhà cửa',
+    brand: 'Philips',
+    model: 'NA120/00',
+    name: 'Nồi chiên Philips NA120/00 4,2L',
+    description: 'Series 1000 dung tích 4,2 lít, công nghệ RapidAir và thiết kế núm xoay dễ sử dụng.',
+    image: '/products/philips-airfryer-na120.png',
+    imageAlt: 'Nồi chiên không dầu Philips Series 1000 NA120/00 màu đen, dung tích 4,2 lít, giỏ chiên đang mở',
+    sourceUrl: 'https://www.philips.com.vn/c-p/NA120_00/1000-series-airfryer-1000-series-42l',
+    price: '1.290.000đ',
+    oldPrice: '1.590.000đ',
+    discount: '-19%',
+    popularity: 7,
+    tone: 'mint',
+    url: 'https://shopee.vn/search?keyword=Philips%20NA120%2F00',
+  },
+  {
+    id: 'binh-giu-nhiet',
+    badge: 'Siêu nhẹ',
+    kind: 'hot',
+    category: 'Nhà cửa',
+    brand: 'LocknLock',
+    model: 'LHC3335',
+    name: 'Bình LocknLock Slo Light 600ml',
+    description: 'Thân bình nhẹ 250 g, thép không gỉ 316 và nắp bật một tay; hãng lưu ý chỉ dùng nước lạnh.',
+    image: '/products/locknlock-slo-light-lhc3335.jpg',
+    imageAlt: 'Bình giữ nhiệt LocknLock Slo Light Tumbler LHC3335 600ml màu vàng chanh trên nền trắng',
+    sourceUrl: 'https://www.locknlock.vn/vi-vn/b%C3%ACnh-gi%E1%BB%AF-nhi%E1%BB%87t-locknlock-slo-light-tumbler-600ml---4-m%C3%A0u-%C4%91en%2C-tr%E1%BA%AFng%2C-v%C3%A0ng%2C-h%E1%BB%93ng---lhc3335/LHC3335.html',
+    price: '405.000đ',
+    oldPrice: '698.000đ',
+    discount: '-42%',
+    popularity: 9,
+    tone: 'yellow',
+    url: 'https://shopee.vn/search?keyword=LocknLock%20LHC3335',
+  },
+  {
+    id: 'kem-chong-nang',
+    badge: 'Kiềm dầu',
+    kind: 'hot',
+    category: 'Làm đẹp',
+    brand: 'ANESSA',
+    model: 'Perfect UV Milk NA 60ml',
+    name: 'Sữa chống nắng ANESSA Perfect UV',
+    description: 'SPF50+ PA++++, kết cấu sữa mỏng nhẹ và công nghệ Auto Veil dành cho da thiên dầu.',
+    image: '/products/anessa-sunscreen-60ml.png',
+    imageAlt: 'Sữa chống nắng ANESSA Perfect UV Sunscreen Skincare Milk NA 60ml màu vàng',
+    sourceUrl: 'https://www.anessa.vn/products/sua-chong-nang-duong-da-kiem-dau-bao-ve-hoan-hao-spf50-pa-60ml',
+    price: '715.000đ',
+    oldPrice: '850.000đ',
+    discount: '-16%',
+    popularity: 10,
+    tone: 'lavender',
+    url: 'https://shopee.vn/search?keyword=ANESSA%20Perfect%20UV%20Milk%2060ml',
+  },
+  {
+    id: 'sua-rua-mat',
+    badge: 'Da dầu',
+    kind: 'voucher',
+    category: 'Làm đẹp',
+    brand: 'CeraVe',
+    model: 'Foaming Cleanser 236ml',
+    name: 'Sữa rửa mặt CeraVe Foaming Cleanser',
+    description: 'Gel tạo bọt cho da thường đến da dầu, làm sạch dầu thừa mà không gây khô căng.',
+    image: '/products/cerave-foaming-cleanser.jpg',
+    imageAlt: 'Sữa rửa mặt tạo bọt CeraVe Foaming Facial Cleanser cho da thường đến da dầu',
+    sourceUrl: 'https://www.cerave.com.vn/cham-soc-da/lam-sach/sua-rua-mat-danh-cho-da-dau',
+    price: '385.000đ',
+    oldPrice: '465.000đ',
+    discount: '-17%',
+    popularity: 8,
+    tone: 'rose',
+    url: 'https://shopee.vn/search?keyword=CeraVe%20Foaming%20Cleanser%20236ml',
+  },
+  {
+    id: 'ao-thun',
+    badge: 'Nhanh khô',
+    kind: 'sale',
+    category: 'Thời trang',
+    brand: 'Coolmate',
+    model: 'Recycle Basics',
+    name: 'Áo thể thao Coolmate Basics',
+    description: 'Phom basic dễ mặc, chất liệu nhẹ và nhanh khô cho tập luyện hoặc vận động hằng ngày.',
+    image: '/products/coolmate-recycle-basics.jpg',
+    imageAlt: 'Áo thun nam thể thao Coolmate Basics màu nâu, phom Regular Fit',
+    sourceUrl: 'https://www.coolmate.me/product/ao-the-thao-nam-promax-recycle-basics1',
+    price: '199.000đ',
+    oldPrice: '249.000đ',
+    discount: '-20%',
+    popularity: 7,
+    tone: 'blue',
+    url: 'https://shopee.vn/search?keyword=Coolmate%20Recycle%20Basics',
+  },
+  {
+    id: 'tui-bim',
+    badge: '2 trong 1',
+    kind: 'voucher',
+    category: 'Mẹ & Bé',
+    brand: 'MOOIMOM',
+    model: 'MMMB5101',
+    name: 'Balo bỉm sữa MOOIMOM 2in1',
+    description: 'Balo nhiều ngăn có khoang giữ nhiệt riêng, chống thấm và đủ chỗ cho laptop.',
+    image: '/products/mooimom-diaper-bag.jpeg',
+    imageAlt: 'Balo bỉm sữa đa năng MOOIMOM 2in1 màu be trên nền trắng',
+    sourceUrl: 'https://www.mooimom.vn/product/tui-bim-sua-da-nang-2in1',
+    price: '899.000đ',
+    oldPrice: '1.090.000đ',
+    discount: '-18%',
+    popularity: 6,
+    tone: 'purple',
+    url: 'https://shopee.vn/search?keyword=MOOIMOM%20t%C3%BAi%20b%E1%BB%89m%20s%E1%BB%AFa%202in1',
+  },
 ];

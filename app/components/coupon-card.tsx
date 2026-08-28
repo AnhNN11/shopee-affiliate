@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import type { Coupon } from '@/app/lib/catalog';
+import { UiIcon } from './iconography';
 
 export function CouponCard({ coupon }: { coupon: Coupon }) {
   const [copied, setCopied] = useState(false);
@@ -16,7 +17,7 @@ export function CouponCard({ coupon }: { coupon: Coupon }) {
   return (
     <article className="voucher-card">
       <div className={`voucher-side ${coupon.kind}`}>
-        <span>{coupon.kind === 'hot' ? '🔥' : coupon.kind === 'sale' ? '%' : '🎟'}</span>
+        <span className="voucher-symbol"><UiIcon name={coupon.kind === 'hot' ? 'spark' : 'ticket'} /></span>
         <strong>{coupon.discount}</strong>
       </div>
       <div className="voucher-body">

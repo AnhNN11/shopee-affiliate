@@ -11,6 +11,5 @@ export function CopyCodeButton({ code }: { code: string }) {
     window.setTimeout(() => setCopied(false), 1800);
   }
 
-  return <button className="copy-code-large" type="button" onClick={copyCode}>{copied ? 'Đã sao chép mã ✓' : `Sao chép ${code}`}</button>;
+  return <button className="copy-code-large" type="button" onClick={copyCode} aria-live="polite">{copied ? 'Đã sao chép mã ✓' : `Sao chép ${code}`}</button>;
 }
-

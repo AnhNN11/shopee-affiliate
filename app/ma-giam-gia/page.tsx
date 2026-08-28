@@ -13,7 +13,7 @@ export default function CouponPage() {
   return (
     <main>
       <section className="subpage-hero coupon-hero">
-        <div className="page-shell"><span className="hero-kicker"><b>🎟 KHO MÃ</b> Tìm nhanh · Đọc rõ điều kiện</span><h1>Mã giảm giá,<br /><em>không cần mò.</em></h1><p>Tìm theo tên mã, ngành hàng hoặc loại ưu đãi. Sao chép mã rồi kiểm tra điều kiện cuối cùng tại Shopee.</p></div>
+        <div className="page-shell"><span className="hero-kicker"><b>KHO MÃ</b> Tìm nhanh · Đọc rõ điều kiện</span><h1>Mã giảm giá Shopee.</h1><p>Tìm theo tên mã, ngành hàng hoặc loại ưu đãi. Sao chép mã rồi kiểm tra điều kiện cuối cùng tại Shopee.</p></div>
       </section>
       <section className="content-with-aside page-shell">
         <div className="main-content"><CouponExplorer /></div>

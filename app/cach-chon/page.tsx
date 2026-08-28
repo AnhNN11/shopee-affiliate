@@ -20,7 +20,7 @@ const steps = [
 export default function MethodPage() {
   return (
     <main>
-      <section className="subpage-hero method-hero"><div className="page-shell"><span className="hero-kicker"><b>✓ MINH BẠCH</b> Lý do đứng sau mỗi gợi ý</span><h1>Chọn vì phù hợp.<br /><em>Không vì giảm sốc.</em></h1><p>Một deal chỉ đáng tiền khi sản phẩm đúng nhu cầu, người bán đáng tin và giá cuối cùng thật sự tốt.</p></div></section>
+      <section className="subpage-hero method-hero"><div className="page-shell"><span className="hero-kicker"><b>MINH BẠCH</b> Lý do đứng sau mỗi gợi ý</span><h1>Cách Chọn Chuẩn lọc deal.</h1><p>Một deal chỉ đáng tiền khi sản phẩm đúng nhu cầu, người bán đáng tin và giá cuối cùng thật sự tốt.</p></div></section>
       <section className="method-page page-shell"><div className="method-intro-panel"><p className="eyebrow">Quy trình 5 bước</p><h2>Từ nhu cầu đến nút “Mua ngay”.</h2><p>Đây là bộ lọc nội dung Chọn Chuẩn dùng trước khi đưa một sản phẩm vào danh sách gợi ý.</p></div><div className="method-timeline">{steps.map((step) => <article key={step.number}><div className="timeline-number">{step.number}</div><div className="timeline-icon">{step.icon}</div><div><h3>{step.title}</h3><p>{step.copy}</p></div></article>)}</div></section>
       <section className="transparency-box page-shell"><div><p className="eyebrow">Affiliate nhưng phải rõ ràng</p><h2>Bạn không trả thêm tiền.</h2></div><p>Khi bạn mua qua liên kết giới thiệu, Chọn Chuẩn có thể nhận một khoản hoa hồng từ nền tảng. Khoản này không làm tăng giá của bạn và không thay đổi tiêu chí chọn sản phẩm.</p><Link className="primary-button" href="/deal-hot">Xem deal đã lọc</Link></section>
     </main>

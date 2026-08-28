@@ -102,8 +102,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             }}
           />
         ) : null}
+        <a className="skip-link" href="#main-content">Đi thẳng đến nội dung</a>
         <SiteHeader />
-        {children}
+        <div id="main-content" tabIndex={-1}>{children}</div>
         <SiteFooter />
       </body>
     </html>

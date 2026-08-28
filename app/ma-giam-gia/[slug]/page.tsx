@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { CouponCard } from '@/app/components/coupon-card';
 import { CopyCodeButton } from '@/app/components/copy-code-button';
+import { UiIcon } from '@/app/components/iconography';
 import { coupons } from '@/app/lib/catalog';
 import { createNotFoundMetadata, createPageMetadata } from '@/app/lib/seo';
 
@@ -28,14 +29,15 @@ export default async function CouponDetailPage({ params }: Props) {
   const { slug } = await params;
   const coupon = coupons.find((item) => item.id === slug);
   if (!coupon) notFound();
-  const related = coupons.filter((item) => item.category === coupon.category && item.id !== coupon.id).slice(0, 2);
+  const sameCategory = coupons.filter((item) => item.category === coupon.category && item.id !== coupon.id);
+  const related = [...sameCategory, ...coupons.filter((item) => item.category !== coupon.category && item.id !== coupon.id)].slice(0, 3);
 
   return (
     <main>
-      <div className="breadcrumbs page-shell"><Link href="/">Trang chủ</Link><span>›</span><Link href="/ma-giam-gia">Mã giảm giá</Link><span>›</span><strong>{coupon.code}</strong></div>
+      <nav className="breadcrumbs page-shell" aria-label="Đường dẫn"><Link href="/">Trang chủ</Link><span>›</span><Link href="/ma-giam-gia">Mã giảm giá</Link><span>›</span><strong>{coupon.code}</strong></nav>
       <section className="coupon-detail page-shell">
         <div className={`coupon-detail-ticket ${coupon.kind}`}>
-          <span className="ticket-icon">{coupon.kind === 'hot' ? '🔥' : coupon.kind === 'sale' ? '%' : '🎟'}</span>
+          <span className="ticket-icon"><UiIcon name={coupon.kind === 'hot' ? 'spark' : 'ticket'} /></span>
           <small>{coupon.badge}</small>
           <strong>{coupon.discount}</strong>
           <p>{coupon.code}</p>

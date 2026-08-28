@@ -4,28 +4,40 @@ import Link from 'next/link';
 export function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div>
-        <Link className="brand footer-brand" href="/" aria-label="Chọn Chuẩn - Trang chủ">
-          <Image
-            className="brand-logo"
-            src="/chon-chuan-logo-v2.svg"
-            width={150}
-            height={32}
-            alt=""
-            aria-hidden="true"
-            unoptimized
-          />
-        </Link>
-        <p className="footer-note">Mã dễ tìm, deal dễ chọn, điều kiện dễ hiểu.</p>
+      <div className="footer-main page-shell">
+        <div className="footer-brand-block">
+          <Link className="brand footer-brand" href="/" aria-label="Chọn Chuẩn - Trang chủ">
+            <Image
+              className="brand-logo"
+              src="/chon-chuan-logo-v2.svg"
+              width={150}
+              height={32}
+              alt=""
+              aria-hidden="true"
+              unoptimized
+            />
+          </Link>
+          <p className="footer-note">Mua ít nhiễu hơn.<br />Chọn có căn cứ hơn.</p>
+        </div>
+
+        <nav className="footer-links" aria-label="Điều hướng chân trang">
+          <span>Khám phá</span>
+          <Link href="/ma-giam-gia">Mã giảm giá</Link>
+          <Link href="/deal-hot">Deal đã lọc</Link>
+          <Link href="/danh-muc">Danh mục</Link>
+          <Link href="/cach-chon">Cách chúng tôi chọn</Link>
+        </nav>
+
+        <div className="footer-editorial">
+          <span>Cam kết biên tập</span>
+          <p className="affiliate-note">Chọn Chuẩn có thể nhận hoa hồng khi bạn mua hàng qua liên kết giới thiệu. Bạn không trả thêm chi phí; tiêu chí chọn sản phẩm không thay đổi. Website độc lập và không phải trang chính thức của Shopee.</p>
+        </div>
       </div>
-      <div className="footer-links">
-        <Link href="/ma-giam-gia">Mã giảm giá</Link>
-        <Link href="/deal-hot">Deal hot</Link>
-        <Link href="/danh-muc">Danh mục</Link>
-        <Link href="/cach-chon">Cách chọn</Link>
+
+      <div className="footer-bottom page-shell">
+        <span>Thông tin giá và ưu đãi có thể thay đổi theo thời điểm.</span>
+        <span className="copyright">© 2026 Chọn Chuẩn</span>
       </div>
-      <p className="affiliate-note">Minh bạch Affiliate: Chọn Chuẩn có thể nhận hoa hồng khi bạn mua hàng qua liên kết giới thiệu. Bạn không trả thêm chi phí. Website này độc lập và không phải trang chính thức của Shopee.</p>
-      <span className="copyright">© 2026 Chọn Chuẩn</span>
     </footer>
   );
 }

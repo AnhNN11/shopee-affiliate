@@ -1,13 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-
-const navItems = [
-  { href: '/', label: 'Trang chủ' },
-  { href: '/ma-giam-gia', label: 'Mã giảm giá' },
-  { href: '/deal-hot', label: 'Deal hot' },
-  { href: '/danh-muc', label: 'Danh mục' },
-  { href: '/cach-chon', label: 'Cách chọn' },
-];
+import { UiIcon } from './iconography';
+import { SiteNav } from './site-nav';
 
 export function SiteHeader() {
   return (
@@ -16,9 +10,9 @@ export function SiteHeader() {
         <div className="announcement-inner page-shell">
           <span className="announcement-item">
             <span className="pulse-dot" aria-hidden="true" />
-            Mã mới được cập nhật mỗi ngày
+            Bản tin mua sắm có biên tập
           </span>
-          <span className="announcement-item">Dữ liệu hiện là bản thử nghiệm</span>
+          <span className="announcement-item">Luôn kiểm tra giá và điều kiện ở bước thanh toán</span>
         </div>
       </div>
       <header className="commerce-header">
@@ -37,36 +31,32 @@ export function SiteHeader() {
           </Link>
 
           <form className="header-search" action="/deal-hot" role="search">
-            <label className="sr-only" htmlFor="site-search">Tìm sản phẩm hoặc mã giảm giá</label>
+            <label className="sr-only" htmlFor="site-search">Tìm deal theo sản phẩm hoặc ngành hàng</label>
             <input
               id="site-search"
               name="q"
               type="search"
-              placeholder="Tìm sản phẩm, ngành hàng hoặc mã giảm giá"
+              placeholder="Tìm deal theo sản phẩm hoặc ngành hàng"
             />
             <button type="submit" aria-label="Tìm kiếm">
-              <span aria-hidden="true">⌕</span>
+              <UiIcon name="search" />
               <span>Tìm kiếm</span>
             </button>
           </form>
 
           <div className="header-actions">
             <Link className="header-action" href="/ma-giam-gia">
-              <span className="header-action-icon" aria-hidden="true">🎟</span>
+              <span className="header-action-icon"><UiIcon name="ticket" /></span>
               <span><small>Kho mã</small><b>Mã giảm giá</b></span>
             </Link>
             <Link className="header-action hot" href="/deal-hot">
-              <span className="header-action-icon" aria-hidden="true">🔥</span>
-              <span><small>Hôm nay</small><b>Deal hot</b></span>
+              <span className="header-action-icon"><UiIcon name="spark" /></span>
+              <span><small>Đáng chú ý</small><b>Deal đã lọc</b></span>
             </Link>
           </div>
         </div>
 
-        <nav className="commerce-nav" aria-label="Điều hướng chính">
-          <div className="page-shell">
-            {navItems.map((item) => <Link href={item.href} key={item.href}>{item.label}</Link>)}
-          </div>
-        </nav>
+        <SiteNav />
       </header>
     </>
   );
