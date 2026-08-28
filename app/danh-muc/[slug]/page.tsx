@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { CouponCard } from '@/app/components/coupon-card';
 import { DealCard } from '@/app/components/deal-card';
 import { categories, coupons, deals } from '@/app/lib/catalog';
+import { createNotFoundMetadata, createPageMetadata } from '@/app/lib/seo';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -22,15 +23,15 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const category = categories.find((item) => item.id === slug);
-  if (!category) return { title: 'Không tìm thấy danh mục — Chọn Chuẩn' };
-  const title = `Deal ${category.name} đáng cân nhắc — Chọn Chuẩn`;
+  if (!category) return createNotFoundMetadata('Không tìm thấy danh mục');
+
   const description = `${category.copy}. Xem deal, mã giảm giá và tiêu chí chọn theo nhu cầu.`;
-  return {
-    title,
+
+  return createPageMetadata({
+    title: `Deal ${category.name}: gợi ý và tiêu chí chọn`,
     description,
-    openGraph: { title, description, images: [] },
-    twitter: { card: 'summary', title, description, images: [] },
-  };
+    path: `/danh-muc/${encodeURIComponent(category.id)}`,
+  });
 }
 
 export default async function CategoryDetailPage({ params }: Props) {

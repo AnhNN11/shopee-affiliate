@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { createPageMetadata } from '@/app/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Cách Chọn Chuẩn lọc deal',
-  description: 'Quy trình kiểm tra nhu cầu, mức giá và độ tin cậy trước khi gợi ý sản phẩm.',
-};
+export const metadata: Metadata = createPageMetadata({
+  title: 'Cách Chọn Chuẩn lọc deal và sản phẩm',
+  description:
+    'Xem quy trình 5 bước để xác định nhu cầu, so sánh cùng phân khúc, đọc đánh giá, kiểm tra người bán và tính giá cuối cùng.',
+  path: '/cach-chon',
+});
 
 const steps = [
   { number: '01', icon: '◎', title: 'Bắt đầu từ nhu cầu', copy: 'Xác định mục đích sử dụng, ngân sách và ba tiêu chí quan trọng nhất. Không bắt đầu bằng thương hiệu hay mức giảm.' },
@@ -23,4 +26,3 @@ export default function MethodPage() {
     </main>
   );
 }
-

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import type { Coupon } from '@/app/lib/catalog';
 
@@ -28,9 +29,9 @@ export function CouponCard({ coupon }: { coupon: Coupon }) {
         <span className="condition">{coupon.minSpend}</span>
         <div className="coupon-code-row">
           <code>{coupon.code}</code>
-          <button type="button" onClick={copyCode}>{copied ? 'Đã sao chép ✓' : 'Sao chép mã'}</button>
+          <button type="button" onClick={copyCode} aria-live="polite">{copied ? 'Đã sao chép ✓' : 'Sao chép mã'}</button>
         </div>
-        <a className="voucher-link" href={`/ma-giam-gia/${coupon.id}`}>Xem chi tiết mã <span>→</span></a>
+        <Link className="voucher-link" href={`/ma-giam-gia/${coupon.id}`}>Xem chi tiết mã <span aria-hidden="true">→</span></Link>
       </div>
     </article>
   );

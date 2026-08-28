@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DealCard } from '@/app/components/deal-card';
 import { deals } from '@/app/lib/catalog';
+import { createNotFoundMetadata, createPageMetadata } from '@/app/lib/seo';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -36,14 +37,13 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const deal = deals.find((item) => item.id === slug);
-  if (!deal) return { title: 'Không tìm thấy deal — Chọn Chuẩn' };
-  const title = `${deal.name} giá ${deal.price} — Chọn Chuẩn`;
-  return {
-    title,
-    description: deal.description,
-    openGraph: { title, description: deal.description, images: [] },
-    twitter: { card: 'summary', title, description: deal.description, images: [] },
-  };
+  if (!deal) return createNotFoundMetadata('Không tìm thấy deal');
+
+  return createPageMetadata({
+    title: `${deal.name}: giá tham khảo và tiêu chí chọn`,
+    description: `${deal.description} Xem mức giá tham khảo và các điểm cần kiểm tra về sản phẩm, người bán trước khi mua.`,
+    path: `/deal-hot/${encodeURIComponent(deal.id)}`,
+  });
 }
 
 export default async function DealDetailPage({ params }: Props) {
@@ -70,7 +70,7 @@ export default async function DealDetailPage({ params }: Props) {
           <p className="detail-description">{deal.description}</p>
           <div className="detail-price-row"><strong>{deal.price}</strong><del>{deal.oldPrice}</del><span>Tiết kiệm {deal.discount}</span></div>
           <div className="mini-checks"><span>✓ Có lý do lựa chọn</span><span>✓ Kiểm tra shop trước khi mua</span><span>✓ Giá có thể thay đổi</span></div>
-          <a className="shopee-button" href={deal.url} target="_blank" rel="sponsored nofollow noopener">Mở sản phẩm trên Shopee <span>↗</span></a>
+          <a className="shopee-button" href={deal.url} target="_blank" rel="sponsored nofollow noopener noreferrer">Tìm sản phẩm tương tự trên Shopee <span>↗</span></a>
           <p className="affiliate-inline">Liên kết trên có thể là liên kết tiếp thị. Bạn không phải trả thêm chi phí.</p>
         </div>
       </section>
@@ -86,4 +86,3 @@ export default async function DealDetailPage({ params }: Props) {
     </main>
   );
 }
-

@@ -1,11 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { categories, deals } from '@/app/lib/catalog';
+import { createPageMetadata } from '@/app/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Danh mục mua sắm — Chọn Chuẩn',
-  description: 'Khám phá gợi ý mua sắm theo từng ngành hàng.',
-};
+export const metadata: Metadata = createPageMetadata({
+  title: 'Danh mục mua sắm và gợi ý theo nhu cầu',
+  description:
+    'Khám phá gợi ý mua sắm theo từng ngành hàng, cùng khoảng giá tham khảo và tiêu chí cần kiểm tra trước khi quyết định.',
+  path: '/danh-muc',
+});
 
 export default function CategoriesPage() {
   return (

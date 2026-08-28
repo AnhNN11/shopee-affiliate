@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import { CouponExplorer } from '@/app/components/coupon-explorer';
+import { createPageMetadata } from '@/app/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Mã giảm giá Shopee — Chọn Chuẩn',
-  description: 'Tìm, lọc và sao chép mã giảm giá theo nhu cầu mua sắm.',
-};
+export const metadata: Metadata = createPageMetadata({
+  title: 'Mã giảm giá Shopee: tìm và kiểm tra điều kiện',
+  description:
+    'Tìm và sao chép các mã giảm giá Shopee minh họa theo loại ưu đãi; luôn kiểm tra điều kiện và mức giảm thực tế tại bước thanh toán.',
+  path: '/ma-giam-gia',
+});
 
 export default function CouponPage() {
   return (
@@ -19,4 +22,3 @@ export default function CouponPage() {
     </main>
   );
 }
-

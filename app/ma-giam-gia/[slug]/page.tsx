@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { CouponCard } from '@/app/components/coupon-card';
 import { CopyCodeButton } from '@/app/components/copy-code-button';
 import { coupons } from '@/app/lib/catalog';
+import { createNotFoundMetadata, createPageMetadata } from '@/app/lib/seo';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -14,14 +15,13 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const coupon = coupons.find((item) => item.id === slug);
-  if (!coupon) return { title: 'Không tìm thấy mã — Chọn Chuẩn' };
-  const title = `${coupon.code}: ${coupon.title} — Chọn Chuẩn`;
-  return {
-    title,
-    description: coupon.description,
-    openGraph: { title, description: coupon.description, images: [] },
-    twitter: { card: 'summary', title, description: coupon.description, images: [] },
-  };
+  if (!coupon) return createNotFoundMetadata('Không tìm thấy mã giảm giá');
+
+  return createPageMetadata({
+    title: `${coupon.code}: hướng dẫn kiểm tra mã giảm giá`,
+    description: `${coupon.title}. ${coupon.description} Dữ liệu mã và điều kiện mang tính minh họa; hãy kiểm tra lại tại Shopee.`,
+    path: `/ma-giam-gia/${encodeURIComponent(coupon.id)}`,
+  });
 }
 
 export default async function CouponDetailPage({ params }: Props) {
@@ -46,7 +46,7 @@ export default async function CouponDetailPage({ params }: Props) {
           <h1>{coupon.title}</h1>
           <p>{coupon.description}</p>
           <div className="coupon-conditions"><div><small>Đơn tối thiểu</small><strong>{coupon.minSpend}</strong></div><div><small>Thời hạn</small><strong>{coupon.expires}</strong></div><div><small>Nhóm ưu đãi</small><strong>{coupon.category}</strong></div></div>
-          <div className="coupon-actions"><CopyCodeButton code={coupon.code} /><a className="shopee-button" href={coupon.url} target="_blank" rel="sponsored nofollow noopener">Dùng mã trên Shopee <span>↗</span></a></div>
+          <div className="coupon-actions"><CopyCodeButton code={coupon.code} /><a className="shopee-button" href={coupon.url} target="_blank" rel="sponsored nofollow noopener noreferrer">Dùng mã trên Shopee <span>↗</span></a></div>
           <p className="affiliate-inline">Điều kiện thực tế có thể khác theo tài khoản, shop và thời điểm thanh toán.</p>
         </div>
       </section>

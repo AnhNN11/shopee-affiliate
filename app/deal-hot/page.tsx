@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import { DealExplorer } from '@/app/components/deal-explorer';
+import { createPageMetadata } from '@/app/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Deal hot đa ngành — Chọn Chuẩn',
-  description: 'Tìm deal theo từ khóa, danh mục và mức độ nổi bật.',
-};
+export const metadata: Metadata = createPageMetadata({
+  title: 'Deal hot Shopee đáng cân nhắc',
+  description:
+    'Khám phá gợi ý deal Shopee theo từ khóa và danh mục; so sánh giá tham khảo, đánh giá và tiêu chí cần kiểm tra trước khi mở sàn.',
+  path: '/deal-hot',
+});
 
 export default async function DealPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const { q = '' } = await searchParams;
@@ -15,4 +18,3 @@ export default async function DealPage({ searchParams }: { searchParams: Promise
     </main>
   );
 }
-
