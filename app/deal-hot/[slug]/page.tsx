@@ -3,7 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DealCard } from '@/app/components/deal-card';
-import { deals } from '@/app/lib/catalog';
+import { affiliateDisclosure, getOutboundRel } from '@/app/lib/affiliate';
+import { findDeal, getDeals } from '@/app/lib/data';
 import { absoluteSiteUrl, createNotFoundMetadata, createPageMetadata } from '@/app/lib/seo';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -31,13 +32,13 @@ const advice: Record<string, { highlights: string[]; checks: string[] }> = {
   },
 };
 
-export function generateStaticParams() {
-  return deals.map((deal) => ({ slug: deal.id }));
+export async function generateStaticParams() {
+  return (await getDeals()).map((deal) => ({ slug: deal.id }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const deal = deals.find((item) => item.id === slug);
+  const deal = await findDeal(slug);
   if (!deal) return createNotFoundMetadata('Không tìm thấy deal');
 
   return createPageMetadata({
@@ -49,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function DealDetailPage({ params }: Props) {
   const { slug } = await params;
-  const deal = deals.find((item) => item.id === slug);
+  const [deal, deals] = await Promise.all([findDeal(slug), getDeals()]);
   if (!deal) notFound();
   const sameCategory = deals.filter((item) => item.category === deal.category && item.id !== deal.id);
   const related = [...sameCategory, ...deals.filter((item) => item.category !== deal.category && item.id !== deal.id)].slice(0, 3);
@@ -99,8 +100,8 @@ export default async function DealDetailPage({ params }: Props) {
           <a className="brand-source-link" href={deal.sourceUrl} target="_blank" rel="noopener noreferrer">Xem thông tin chính thức từ {deal.brand} <span aria-hidden="true">↗</span></a>
           <div className="detail-price-row"><strong>{deal.price}</strong><del>{deal.oldPrice}</del><span>Giảm {deal.discount.replace('-', '')}</span></div>
           <div className="mini-checks"><span>✓ Có lý do lựa chọn</span><span>✓ Kiểm tra shop trước khi mua</span><span>✓ Giá có thể thay đổi</span></div>
-          <a className="shopee-button" href={deal.url} target="_blank" rel="sponsored nofollow noopener noreferrer">Tìm sản phẩm tương tự trên Shopee <span>↗</span></a>
-          <p className="affiliate-inline">Liên kết trên có thể là liên kết tiếp thị. Bạn không phải trả thêm chi phí.</p>
+          <a className="shopee-button" href={`/go/deal/${deal.id}`} target="_blank" rel={getOutboundRel(deal)}>Tìm sản phẩm tương tự trên Shopee <span>↗</span></a>
+          <p className="affiliate-inline">{affiliateDisclosure}</p>
         </div>
       </section>
 

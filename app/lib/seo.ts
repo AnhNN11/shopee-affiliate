@@ -5,7 +5,7 @@ export const SITE_DESCRIPTION =
   'Gợi ý deal, mã giảm giá và hướng dẫn mua sắm có chọn lọc, giúp bạn kiểm tra giá và điều kiện trước khi quyết định.';
 export const PRODUCTION_SITE_URL = 'https://chonchuan.dolphinxstudio.com';
 export const SOCIAL_IMAGE_PATH = '/chon-chuan-social.png';
-export const SOCIAL_IMAGE_ALT = 'Chọn Chuẩn — Mã mới, deal thật, chọn nhanh';
+export const SOCIAL_IMAGE_ALT = 'Chọn Chuẩn — Deal và mã giảm giá có nguồn';
 
 function readSiteUrl(): string {
   const value = process.env.NEXT_PUBLIC_SITE_URL?.trim() || PRODUCTION_SITE_URL;
@@ -45,6 +45,7 @@ type PageMetadataOptions = {
   description: string;
   path: string;
   index?: boolean;
+  follow?: boolean;
 };
 
 export function createPageMetadata({
@@ -52,6 +53,7 @@ export function createPageMetadata({
   description,
   path,
   index = true,
+  follow = true,
 }: PageMetadataOptions): Metadata {
   const canonical = absoluteSiteUrl(path);
   const socialTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
@@ -78,16 +80,16 @@ export function createPageMetadata({
     robots: index
       ? {
           index: true,
-          follow: true,
+          follow,
           googleBot: {
             index: true,
-            follow: true,
+            follow,
             'max-image-preview': 'large',
             'max-snippet': -1,
             'max-video-preview': -1,
           },
         }
-      : { index: false, follow: false },
+      : { index: false, follow },
   };
 }
 

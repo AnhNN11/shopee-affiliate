@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { DealExplorer } from '@/app/components/deal-explorer';
+import { getCategories, getDeals } from '@/app/lib/data';
 import { createPageMetadata } from '@/app/lib/seo';
 
 export const metadata: Metadata = createPageMetadata({
@@ -11,10 +12,11 @@ export const metadata: Metadata = createPageMetadata({
 
 export default async function DealPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const { q = '' } = await searchParams;
+  const [categories, deals] = await Promise.all([getCategories(), getDeals()]);
   return (
     <main>
       <section className="subpage-hero deal-hero"><div className="page-shell"><span className="hero-kicker"><b>DEAL ĐÃ LỌC</b> Giá tốt có lý do</span><h1>Deal Shopee đáng cân nhắc.</h1><p>Tìm theo hãng, model hoặc ngành hàng; xem nguồn thông tin và các tiêu chí cần kiểm tra trước khi mở Shopee.</p></div></section>
-      <section className="listing-section page-shell"><DealExplorer initialQuery={q} /></section>
+      <section className="listing-section page-shell"><DealExplorer categories={categories} deals={deals} initialQuery={q} /></section>
     </main>
   );
 }

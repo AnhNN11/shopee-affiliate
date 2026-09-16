@@ -1,0 +1,7 @@
+# Facebook cover v2
+
+Generated with the built-in image generation tool. Output: public/facebook-cover-v2.png.
+
+## Prompt
+
+Use case: ads-marketing. Create a completely fresh art-directed Facebook cover for Vietnamese curated shopping brand Chọn Chuẩn. Ultra-wide 2.63:1. A sophisticated modern lifestyle editorial, warm ivory background, vivid vermilion orange accent and near-black typography. Beautiful airy composition with real photographic tactile objects on the right: silver headphones, a brushed steel insulated tumbler, warm amber skincare bottle, folded cream fabric, a small orange shopping bag. Natural directional daylight, soft real shadows, subtle curved warm-white surface, true materials, tasteful imperfect arrangement; no green monochrome objects, no podiums, no generic 3D rendering. Left-center typography, generous breathing room: exact title "Chọn Chuẩn" in stylish heavy modern sans serif, one line, smaller than half the canvas width. Below exact text "Mua ít đắn đo. Chọn đúng thứ cần." in refined readable sans serif. Small orange outlined pill below with exact text "Deal • Review • Mã giảm giá". All main content in central 70% width and middle 65% height to survive mobile cropping; bottom left remains quiet for profile avatar overlay. Fresh contemporary Vietnamese ecommerce editorial design, restrained, elegant, welcoming, high craft. No invented logos or product brands, no watermark, no price stickers, no sale bursts, no illegible extra text. Deliver finished cover image only.

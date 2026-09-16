@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { affiliateDisclosure } from '@/app/lib/affiliate';
 
 export function SiteFooter() {
   return (
@@ -30,7 +31,7 @@ export function SiteFooter() {
 
         <div className="footer-editorial">
           <span>Cam kết biên tập</span>
-          <p className="affiliate-note">Chọn Chuẩn có thể nhận hoa hồng khi bạn mua hàng qua liên kết giới thiệu. Bạn không trả thêm chi phí; tiêu chí chọn sản phẩm không thay đổi. Website độc lập và không phải trang chính thức của Shopee.</p>
+          <p className="affiliate-note">{affiliateDisclosure} Website độc lập và không phải trang chính thức của Shopee.</p>
         </div>
       </div>
 

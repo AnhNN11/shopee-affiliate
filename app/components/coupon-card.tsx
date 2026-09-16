@@ -2,37 +2,65 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import type { Coupon } from '@/app/lib/catalog';
+import {
+  formatCouponSchedule,
+  formatDiscountShort,
+  formatMinSpend,
+  formatVerifiedDate,
+  getCouponStatusLabel,
+  type CouponRecord,
+  type CouponStatus,
+} from '@/app/lib/coupons';
 import { UiIcon } from './iconography';
 
-export function CouponCard({ coupon }: { coupon: Coupon }) {
-  const [copied, setCopied] = useState(false);
+type CopyState = 'idle' | 'copied' | 'error';
+
+export function CouponCard({ coupon, status }: { coupon: CouponRecord; status: CouponStatus }) {
+  const [copyState, setCopyState] = useState<CopyState>('idle');
 
   async function copyCode() {
-    await navigator.clipboard?.writeText(coupon.code);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1600);
+    if (status !== 'active') return;
+
+    try {
+      if (!navigator.clipboard) throw new Error('Clipboard API unavailable');
+      await navigator.clipboard.writeText(coupon.code);
+      setCopyState('copied');
+    } catch {
+      setCopyState('error');
+    }
+
+    window.setTimeout(() => setCopyState('idle'), 1800);
   }
 
+  const copyLabel =
+    status !== 'active'
+      ? getCouponStatusLabel(status)
+      : copyState === 'copied'
+        ? 'Đã sao chép ✓'
+        : copyState === 'error'
+          ? 'Hãy chọn mã'
+          : 'Sao chép mã';
+
   return (
-    <article className="voucher-card">
-      <div className={`voucher-side ${coupon.kind}`}>
-        <span className="voucher-symbol"><UiIcon name={coupon.kind === 'hot' ? 'spark' : 'ticket'} /></span>
-        <strong>{coupon.discount}</strong>
+    <article className={`voucher-card coupon-status-${status}`}>
+      <div className={`voucher-side ${coupon.tone}`}>
+        <span className="voucher-symbol"><UiIcon name={coupon.tone === 'hot' ? 'spark' : 'ticket'} /></span>
+        <strong>{formatDiscountShort(coupon.discount)}</strong>
       </div>
       <div className="voucher-body">
         <div className="badge-row">
-          <span className={`status-badge ${coupon.kind}`}>{coupon.badge}</span>
-          <span className="expiry">{coupon.expires}</span>
+          <span className={`status-badge ${coupon.tone}`}>{coupon.badge}</span>
+          <span className={`coupon-status-badge status-${status}`}>{getCouponStatusLabel(status)}</span>
         </div>
         <h3>{coupon.title}</h3>
         <p>{coupon.description}</p>
-        <span className="condition">{coupon.minSpend}</span>
+        <span className="condition">{formatMinSpend(coupon.minSpendVnd)} · {formatCouponSchedule(coupon, status)}</span>
+        <span className="coupon-source-line">Nguồn Shopee · <time dateTime={coupon.verifiedAt}>kiểm tra {formatVerifiedDate(coupon.verifiedAt)}</time></span>
         <div className="coupon-code-row">
           <code>{coupon.code}</code>
-          <button type="button" onClick={copyCode} aria-live="polite">{copied ? 'Đã sao chép ✓' : 'Sao chép mã'}</button>
+          <button type="button" onClick={copyCode} disabled={status !== 'active'} aria-live="polite">{copyLabel}</button>
         </div>
-        <Link className="voucher-link" href={`/ma-giam-gia/${coupon.id}`}>Xem chi tiết mã <span aria-hidden="true">→</span></Link>
+        <Link className="voucher-link" href={`/ma-giam-gia/${coupon.id}`}>Xem nguồn &amp; điều kiện <span aria-hidden="true">→</span></Link>
       </div>
     </article>
   );

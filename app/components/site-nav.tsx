@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 
 const navItems = [
   { href: '/', label: 'Trang chủ' },
+  { href: '/san-pham', label: 'Sản phẩm Affiliate' },
   { href: '/ma-giam-gia', label: 'Mã giảm giá' },
   { href: '/deal-hot', label: 'Deal đã lọc' },
   { href: '/danh-muc', label: 'Danh mục' },

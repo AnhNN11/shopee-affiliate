@@ -2,11 +2,19 @@ import Link from 'next/link';
 import { CouponCard } from './components/coupon-card';
 import { DealCard } from './components/deal-card';
 import { UiIcon } from './components/iconography';
-import { categories, coupons, deals } from './lib/catalog';
+import { getActiveCoupons, getCategories, getDeals } from './lib/data';
 
-export default function Home() {
+export const revalidate = 60;
+
+export default async function Home() {
+  const now = new Date();
+  const [activeCoupons, categories, deals] = await Promise.all([
+    getActiveCoupons(now),
+    getCategories(),
+    getDeals(),
+  ]);
   const featuredDeal = deals[3];
-  const featuredCoupon = coupons[0];
+  const featuredCoupon = activeCoupons[0];
 
   return (
     <main className="storefront-home">
@@ -47,13 +55,15 @@ export default function Home() {
             <li><span>03</span><p><strong>Đúng người bán</strong>Đọc đánh giá mới và chính sách đổi trả.</p></li>
           </ol>
           <Link href="/cach-chon">Mở quy trình Chọn Chuẩn <UiIcon name="arrow" /></Link>
-          <p className="brief-voucher">Mã đáng chú ý: <Link href={`/ma-giam-gia/${featuredCoupon.id}`}>{featuredCoupon.code}</Link></p>
+          {featuredCoupon
+            ? <p className="brief-voucher">Mã đã đối chiếu: <Link href={`/ma-giam-gia/${featuredCoupon.id}`}>{featuredCoupon.code}</Link></p>
+            : <p className="brief-voucher">Mã mới đang được đối chiếu từ nguồn Shopee.</p>}
         </aside>
       </section>
 
       <section className="benefit-strip" aria-label="Tổng quan nội dung">
         <div className="page-shell">
-          <div className="benefit-item"><span><UiIcon name="ticket" /></span><p><strong>{coupons.length} mã giảm giá</strong><small>Dễ lọc và sao chép</small></p></div>
+          <div className="benefit-item"><span><UiIcon name="ticket" /></span><p><strong>{activeCoupons.length} mã đã đối chiếu</strong><small>Có nguồn và thời hạn rõ ràng</small></p></div>
           <div className="benefit-item"><span><UiIcon name="spark" /></span><p><strong>{deals.length} deal nổi bật</strong><small>Ảnh và thông số từ hãng</small></p></div>
           <div className="benefit-item"><span><UiIcon name="grid" /></span><p><strong>{categories.length} ngành hàng</strong><small>Duyệt nhanh theo nhu cầu</small></p></div>
         </div>
@@ -78,10 +88,12 @@ export default function Home() {
 
       <section className="commerce-section coupon-section page-shell" aria-labelledby="coupon-section-title">
         <div className="commerce-heading">
-          <div><p className="section-kicker">Lấy mã trước khi mua</p><h2 id="coupon-section-title">Mã đáng chú ý hôm nay</h2></div>
+          <div><p className="section-kicker">Lấy mã trước khi mua</p><h2 id="coupon-section-title">Mã Shopee đã đối chiếu</h2></div>
           <Link href="/ma-giam-gia">Xem tất cả mã <span aria-hidden="true">→</span></Link>
         </div>
-        <div className="voucher-grid home-vouchers">{coupons.slice(0, 3).map((coupon) => <CouponCard key={coupon.id} coupon={coupon} />)}</div>
+        {activeCoupons.length
+          ? <div className="voucher-grid home-vouchers">{activeCoupons.slice(0, 3).map((coupon) => <CouponCard key={coupon.id} coupon={coupon} status="active" />)}</div>
+          : <div className="empty-state"><UiIcon name="ticket" /><h3>Chưa có mã còn trong thời hạn</h3><p>Mở Kho mã để kiểm tra các nguồn Shopee chính thức.</p></div>}
       </section>
 
       <section className="commerce-section flash-section" aria-labelledby="deal-section-title">
@@ -105,7 +117,7 @@ export default function Home() {
         <article className="trust-item"><span>03</span><h3>Kiểm tra lần cuối</h3><p>Đối chiếu giá, shop, bảo hành và đánh giá mới trước khi mua.</p></article>
       </section>
 
-      <section className="demo-disclosure page-shell"><span>i</span><p><strong>Lưu ý bản thử nghiệm:</strong> hình ảnh và thông số sản phẩm được đối chiếu từ trang hãng; mã, mức giảm và giá hiện là dữ liệu minh họa. Trước khi mua, hãy xác nhận điều kiện và giá cuối cùng trên Shopee.</p></section>
+      <section className="demo-disclosure page-shell"><span>i</span><p><strong>Nguồn dữ liệu:</strong> hình ảnh và thông số sản phẩm được đối chiếu từ trang hãng; mã giảm giá có liên kết điều kiện và ngày kiểm tra từ Shopee. Giá sản phẩm vẫn là giá tham khảo, hãy xác nhận giá cuối trước khi mua.</p></section>
     </main>
   );
 }

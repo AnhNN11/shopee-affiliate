@@ -1,16 +1,26 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { categories, deals } from '@/app/lib/catalog';
+import type { Category, Deal } from '@/app/lib/catalog';
 import { DealCard } from './deal-card';
 import { UiIcon } from './iconography';
 
-const categoryNames = ['Tất cả', ...categories.map((category) => category.name)];
-
-export function DealExplorer({ initialQuery = '' }: { initialQuery?: string }) {
+export function DealExplorer({
+  categories,
+  deals,
+  initialQuery = '',
+}: {
+  categories: readonly Category[];
+  deals: readonly Deal[];
+  initialQuery?: string;
+}) {
   const [query, setQuery] = useState(initialQuery);
   const [category, setCategory] = useState('Tất cả');
   const [sort, setSort] = useState('Nổi bật');
+  const categoryNames = useMemo(
+    () => ['Tất cả', ...categories.map((item) => item.name)],
+    [categories],
+  );
 
   const visibleDeals = useMemo(() => {
     const keyword = query.trim().toLocaleLowerCase('vi');
@@ -22,7 +32,7 @@ export function DealExplorer({ initialQuery = '' }: { initialQuery?: string }) {
     if (sort === 'Giảm nhiều') return [...filtered].sort((a, b) => Number(b.discount.replace(/\D/g, '')) - Number(a.discount.replace(/\D/g, '')));
     if (sort === 'Được quan tâm') return [...filtered].sort((a, b) => b.popularity - a.popularity);
     return filtered;
-  }, [category, query, sort]);
+  }, [category, deals, query, sort]);
 
   return (
     <>

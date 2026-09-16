@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Chọn Chuẩn
 
-## Getting Started
+Website biên tập deal và mã giảm giá Shopee. Dữ liệu sản phẩm được đối chiếu với trang hãng; mã giảm giá chỉ được xuất bản khi có trang điều kiện Shopee riêng.
 
-First, run the development server:
+## Chạy dự án
+
+Yêu cầu Node.js 22.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Kiểm tra đầy đủ trước khi deploy:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run check
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Cập nhật mã giảm giá
 
-## Learn More
+Dữ liệu và quy tắc vòng đời nằm tại `app/lib/coupons.ts`.
 
-To learn more about Next.js, take a look at the following resources:
+Một mã chỉ được đặt `published: true` khi có đủ:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- mã chính xác và không trùng;
+- mức giảm, đơn tối thiểu, đối tượng áp dụng;
+- `startsAt`, `endsAt`, `verifiedAt` theo RFC 3339 và có múi giờ;
+- `sourceUrl` là trang Điều Kiện cụ thể trên Shopee;
+- `destinationUrl` là trang Shopee để người dùng lưu hoặc áp mã.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Trang chủ, trang danh sách, danh mục và sitemap tự loại mã hết hạn. Trang chi tiết cũ vẫn tồn tại ở trạng thái `noindex, follow` để không tạo URL rác. Các trang nhạy theo thời gian được revalidate mỗi 60 giây.
 
-## Deploy on Vercel
+## Shopee Affiliate
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Trang `/san-pham` đọc collection `affiliate_products`, tìm kiếm và phân trang phía server. Dữ liệu dùng schema v2 để lưu riêng hoa hồng Shopee, Xtra, tổng hoa hồng, trạng thái link và thời gian xác minh.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Route `/go/product/[id]` chỉ chuyển hướng khi sản phẩm có `status: "active"` và `affiliateUrl` HTTPS thuộc Shopee. Sản phẩm chờ link không được thay bằng link tìm kiếm vì có thể không ghi nhận hoa hồng. Lỗi ghi click không chặn chuyển hướng mua hàng.
+
+Không nhận URL đích từ query string. Route chuyển hướng chỉ tra ID có trong catalog và chỉ cho phép hostname Shopee qua HTTPS để tránh open redirect.
+
+Nhập hoặc đồng bộ tệp JSON đã chuẩn hóa:
+
+```bash
+npm run db:import-products -- products.json
+```
+
+Thêm `--reconcile` khi tệp là snapshot đầy đủ; sản phẩm không còn trong snapshot sẽ được chuyển sang `expired`, không bị xóa.
+
+```bash
+npm run db:import-products -- products.json --reconcile
+npm run db:audit-products
+```
+
+`npm run db:seed` chỉ thêm sản phẩm mẫu chưa tồn tại, không ghi đè link Affiliate đã nhập. Dùng `npm run db:migrate-products` khi nâng dữ liệu cũ lên schema v2.
+
+## MongoDB
+
+Website dùng MongoDB cho bốn collection nội dung (`categories`, `deals`, `coupons`, `affiliate_products`) và một collection thống kê (`outbound_clicks`). Khi chưa có `MONGODB_URI`, ứng dụng dùng catalog trong source để local development và build preview không bị chặn.
+
+1. Tạo database trên MongoDB Atlas hoặc MongoDB tự quản lý.
+2. Sao chép `.env.example` thành `.env.local`, sau đó điền `MONGODB_URI` và `MONGODB_DB`.
+3. Chạy `npm run db:seed` để tạo index và đồng bộ dữ liệu mẫu.
+4. Chạy `npm run dev` và kiểm tra danh sách deal, mã giảm giá cùng route `/go/*`.
+
+Không commit connection string. Trên Vercel, thêm hai biến MongoDB vào Project Settings → Environment Variables trước khi deploy.
+
+## Biến môi trường
+
+Sao chép `.env.example` thành `.env.local` khi phát triển cục bộ. Trên Vercel, cấu hình cùng tên trong Project Settings → Environment Variables.

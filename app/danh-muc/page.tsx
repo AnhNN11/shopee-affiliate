@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { categories, deals } from '@/app/lib/catalog';
+import { getCategories, getDeals } from '@/app/lib/data';
 import { createPageMetadata } from '@/app/lib/seo';
 
 export const metadata: Metadata = createPageMetadata({
@@ -10,7 +10,8 @@ export const metadata: Metadata = createPageMetadata({
   path: '/danh-muc',
 });
 
-export default function CategoriesPage() {
+export default async function CategoriesPage() {
+  const [categories, deals] = await Promise.all([getCategories(), getDeals()]);
   return (
     <main>
       <section className="subpage-hero category-hero"><div className="page-shell"><span className="hero-kicker"><b>DANH MỤC</b> Mỗi nhu cầu một lối đi</span><h1>Danh mục mua sắm.</h1><p>Chọn nhóm bạn đang quan tâm để xem sản phẩm, khoảng giá và những tiêu chí cần kiểm tra trước khi mua.</p></div></section>
