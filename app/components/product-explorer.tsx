@@ -1,43 +1,46 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import type { AffiliateProductPage, CommissionProgram, ProductSort } from '@/app/lib/products';
+import { shoppingCategories, type ShoppingFilters, type shoppingPage, type ShoppingProduct } from '@/app/lib/storefront';
 
-const labels: Record<'all' | CommissionProgram, string> = { all: 'Tất cả', shopee: 'Hoa hồng Shopee', xtra: 'Hoa hồng Xtra' };
-
-export function ProductExplorer({ result, query, program, sort }: { result: AffiliateProductPage; query: string; program: 'all' | CommissionProgram; sort: ProductSort }) {
-  const href = (next: { program?: 'all' | CommissionProgram; sort?: ProductSort; page?: number }) => {
-    const params = new URLSearchParams();
-    if (query) params.set('q', query);
-    const nextProgram = next.program ?? program;
-    const nextSort = next.sort ?? sort;
-    if (nextProgram !== 'all') params.set('program', nextProgram);
-    if (nextSort !== 'rank') params.set('sort', nextSort);
-    if ((next.page ?? 1) > 1) params.set('page', String(next.page));
-    const suffix = params.toString();
-    return suffix ? `/san-pham?${suffix}` : '/san-pham';
-  };
-
-  return <>
-    <form className="explorer-panel affiliate-toolbar" action="/san-pham" method="get">
-      <label className="big-search"><span className="sr-only">Tìm sản phẩm</span><input name="q" defaultValue={query} type="search" placeholder="Tìm trong sản phẩm đã đồng bộ" /></label>
-      {program !== 'all' && <input type="hidden" name="program" value={program} />}
-      {sort !== 'rank' && <input type="hidden" name="sort" value={sort} />}
-      <button className="primary-button" type="submit">Tìm sản phẩm</button>
-    </form>
-    <div className="filter-chips spacious" role="group" aria-label="Lọc chương trình hoa hồng">
-      {(Object.keys(labels) as Array<keyof typeof labels>).map((key) => <Link key={key} className={program === key ? 'active' : ''} aria-current={program === key ? 'page' : undefined} href={href({ program:key, page:1 })}>{labels[key]}</Link>)}
+export function ShoppingProductCard({ product }: { product: ShoppingProduct }) {
+  return <article className="affiliate-product-card">
+    <Link className="affiliate-product-media" href={`/san-pham/${product.id}`}><Image src={product.image} alt={product.name} fill sizes="(max-width: 740px) 50vw, (max-width: 1020px) 33vw, 25vw" /></Link>
+    <div className="affiliate-product-body">
+      <p className="shopping-category">{shoppingCategories.find((category) => category.id === product.category)?.name}</p>
+      <h2><Link href={`/san-pham/${product.id}`}>{product.name}</Link></h2>
+      <small>Giá tham khảo</small><p className="affiliate-price">{product.price}</p>
+      <p className="shopping-sales">{product.sales} đã bán · Theo dữ liệu Shopee</p>
+      <a className="primary-button" href={`/go/product/${product.id}`} target="_blank" rel="nofollow sponsored noopener noreferrer">{product.purchaseLabel} ↗</a>
+      <Link className="shopping-detail-link" href={`/san-pham/${product.id}`}>Xem chi tiết</Link>
     </div>
-    <div className="product-sort-links" aria-label="Sắp xếp sản phẩm">
-      <span>Sắp xếp:</span>{([['rank','Shopee đề xuất'],['commission','Hoa hồng cao'],['sales','Bán chạy']] as Array<[ProductSort,string]>).map(([key,label]) => <Link key={key} className={sort === key ? 'active' : ''} href={href({ sort:key, page:1 })}>{label}</Link>)}
-    </div>
-    <div className="result-summary"><strong>{result.total}</strong> sản phẩm <span>· Trang {result.page}/{result.pageCount} · Hoa hồng và giá có thể thay đổi</span></div>
-    {result.products.length ? <div className="affiliate-product-grid">{result.products.map((product) => <article className="affiliate-product-card" key={product.id}>
-      <div className="affiliate-product-media"><Image src={product.image} alt={product.name} fill sizes="(max-width: 480px) 100vw, (max-width: 740px) 50vw, (max-width: 1020px) 33vw, 25vw" />{product.discount && <span>{product.discount}</span>}</div>
-      <div className="affiliate-product-body"><div className="program-badges"><b>SHOPEE</b>{product.programs.includes('xtra') && <b className="xtra">XTRA</b>}</div><h2>{product.name}</h2><p className="affiliate-price">{product.price}</p><div className="affiliate-stats"><span>{product.sales} đã bán</span><strong>Tổng tối đa {formatRate(product.commission.totalRate)}</strong></div>{product.programs.includes('xtra') && <p className="commission-breakdown">Shopee: {formatOptionalRate(product.commission.shopeeRate)} · Xtra: {formatOptionalRate(product.commission.xtraRate)}</p>}{product.status === 'active' && product.affiliateUrl ? <a className="primary-button" href={`/go/product/${product.id}`} rel="nofollow sponsored">Mở link Affiliate</a> : <span className="primary-button affiliate-link-pending">Chờ link từ Shopee</span>}</div>
-    </article>)}</div> : <div className="empty-state"><h2>Không tìm thấy sản phẩm</h2><p>Thử từ khóa khác hoặc quay lại bộ lọc Tất cả.</p></div>}
-    {result.pageCount > 1 && <nav className="product-pagination" aria-label="Phân trang sản phẩm">{Array.from({ length:result.pageCount }, (_,index) => index+1).map((page) => <Link key={page} className={page === result.page ? 'active' : ''} aria-current={page === result.page ? 'page' : undefined} href={href({ page })}>{page}</Link>)}</nav>}
-  </>;
+  </article>;
 }
 
-function formatRate(value:number):string { return `${String(value).replace('.',',')}%`; }
-function formatOptionalRate(value:number|undefined):string { return value === undefined ? 'chưa tách' : formatRate(value); }
+export function ProductExplorer({ result, filters }: { result: ReturnType<typeof shoppingPage>; filters: ShoppingFilters }) {
+  const href = (changes: Partial<ShoppingFilters>) => {
+    const values = { ...filters, page: 1, ...changes };
+    const params = new URLSearchParams();
+    if (values.query) params.set('q', values.query);
+    if (values.category && values.category !== 'all') params.set('category', values.category);
+    if (values.sort && values.sort !== 'recommended') params.set('sort', values.sort);
+    if (values.min !== undefined) params.set('min', String(values.min));
+    if (values.max !== undefined) params.set('max', String(values.max));
+    if (values.page > 1) params.set('page', String(values.page));
+    return `/san-pham${params.size ? `?${params}` : ''}`;
+  };
+  return <>
+    <div className="filter-chips spacious" aria-label="Danh mục sản phẩm">{shoppingCategories.map((category) => <Link key={category.id} className={filters.category === category.id ? 'active' : ''} href={href({ category: category.id })}>{category.name}</Link>)}</div>
+    <form className="explorer-panel shopping-filters" action="/san-pham" role="search">
+      <label className="big-search"><span className="sr-only">Tìm sản phẩm</span><input name="q" defaultValue={filters.query} placeholder="Bạn đang tìm món gì?" type="search" /></label>
+      <input type="hidden" name="category" value={filters.category || 'all'} />
+      <label>Giá từ (đ)<input type="number" name="min" min="0" max="999999999999" defaultValue={filters.min} placeholder="0" /></label>
+      <label>Đến (đ)<input type="number" name="max" min="0" max="999999999999" defaultValue={filters.max} placeholder="Không giới hạn" /></label>
+      <label>Sắp xếp<select name="sort" defaultValue={filters.sort || 'recommended'}><option value="recommended">Gợi ý cho bạn</option><option value="price-asc">Giá thấp đến cao</option><option value="price-desc">Giá cao đến thấp</option><option value="sales">Bán chạy</option></select></label>
+      <button className="primary-button" type="submit">Tìm kiếm</button>
+      <Link href="/san-pham">Xóa bộ lọc</Link>
+    </form>
+    <div className="result-summary"><strong>{result.total}</strong> sản phẩm <span>· Trang {result.page}/{result.pageCount} · Kiểm tra giá cuối và phí giao hàng trên Shopee</span></div>
+    {result.products.length ? <div className="affiliate-product-grid">{result.products.map((product) => <ShoppingProductCard key={product.id} product={product} />)}</div> : <div className="empty-state"><h2>Chưa tìm thấy món phù hợp</h2><p>Thử tên ngắn hơn, chọn danh mục khác hoặc mở rộng khoảng giá.</p><Link href="/san-pham">Xem tất cả sản phẩm →</Link></div>}
+    {result.pageCount > 1 && <nav className="product-pagination" aria-label="Phân trang sản phẩm">{Array.from({ length: result.pageCount }, (_, index) => index + 1).filter((page) => page === 1 || page === result.pageCount || Math.abs(page - result.page) <= 2).map((page) => <Link key={page} href={href({ page })} className={page === result.page ? 'active' : ''} aria-current={page === result.page ? 'page' : undefined}>{page}</Link>)}</nav>}
+  </>;
+}

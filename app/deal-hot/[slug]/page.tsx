@@ -82,7 +82,6 @@ export default async function DealDetailPage({ params }: Props) {
       <section className="deal-detail page-shell">
         <div className={`detail-visual ${deal.tone}`}>
           <span className={`status-badge ${deal.kind}`}>{deal.badge}</span>
-          <span className="detail-discount">{deal.discount}</span>
           <Image
             className="detail-product-photo"
             src={deal.image}
@@ -98,7 +97,7 @@ export default async function DealDetailPage({ params }: Props) {
           <div className="detail-rating"><span>{deal.brand}</span><span>Model {deal.model}</span><span>Giá có thể thay đổi</span></div>
           <p className="detail-description">{deal.description}</p>
           <a className="brand-source-link" href={deal.sourceUrl} target="_blank" rel="noopener noreferrer">Xem thông tin chính thức từ {deal.brand} <span aria-hidden="true">↗</span></a>
-          <div className="detail-price-row"><strong>{deal.price}</strong><del>{deal.oldPrice}</del><span>Giảm {deal.discount.replace('-', '')}</span></div>
+          <div className="detail-price-row"><strong>{deal.price}</strong><span>Giá tham khảo</span></div>
           <div className="mini-checks"><span>✓ Có lý do lựa chọn</span><span>✓ Kiểm tra shop trước khi mua</span><span>✓ Giá có thể thay đổi</span></div>
           <a className="shopee-button" href={`/go/deal/${deal.id}`} target="_blank" rel={getOutboundRel(deal)}>Tìm sản phẩm tương tự trên Shopee <span>↗</span></a>
           <p className="affiliate-inline">{affiliateDisclosure}</p>

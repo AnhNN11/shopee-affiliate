@@ -5,12 +5,14 @@ import { categories as seedCategories, deals as seedDeals, type Category, type D
 import {
   coupons as seedCoupons,
   getCouponStatus,
-  validateCouponCatalog,
+  mergeReviewedCoupons,
   type CouponRecord,
 } from './coupons';
 import { getDatabase, isMongoConfigured } from './mongodb';
 import { shopeeProducts } from './shopee-products';
 import type { AffiliateProduct, AffiliateProductPage, CommissionProgram, ProductSort } from './products';
+import { isAffiliateProduct } from './products';
+import { toShoppingProduct, type ShoppingProduct } from './storefront';
 
 type CollectionName = 'categories' | 'deals' | 'coupons' | 'affiliate_products';
 
@@ -36,9 +38,8 @@ export const getDeals = cache(async (): Promise<Deal[]> => {
 
 export const getCoupons = cache(async (): Promise<CouponRecord[]> => {
   if (!isMongoConfigured()) return [...seedCoupons];
-  const coupons = await readCollection<CouponRecord>('coupons');
-  validateCouponCatalog(coupons);
-  return coupons;
+  const stored = await readCollection<CouponRecord>('coupons');
+  return mergeReviewedCoupons(stored);
 });
 
 export const getAffiliateProducts = cache(async (): Promise<AffiliateProduct[]> => {
@@ -52,6 +53,12 @@ export async function findAffiliateProduct(id: string): Promise<AffiliateProduct
   const database = await getDatabase();
   return (await database.collection<AffiliateProduct>('affiliate_products').findOne({ id }, { projection: { _id: 0 } })) ?? undefined;
 }
+
+export const getShoppingProducts = cache(async (): Promise<ShoppingProduct[]> => {
+  return (await getAffiliateProducts()).filter(isAffiliateProduct)
+    .filter((product) => product.status === 'active' || product.status === 'pending_link')
+    .map(toShoppingProduct);
+});
 
 export async function getAffiliateProductPage(options: {
   query?: string;
@@ -101,7 +108,7 @@ export async function findPublishedCoupon(id: string): Promise<CouponRecord | un
 
 export async function getDiscoverableCoupons(now: number | Date = Date.now()): Promise<CouponRecord[]> {
   return (await getCoupons()).filter(
-    (coupon) => coupon.published && getCouponStatus(coupon, now) !== 'expired',
+    (coupon) => coupon.published && ['active', 'upcoming'].includes(getCouponStatus(coupon, now)),
   );
 }
 

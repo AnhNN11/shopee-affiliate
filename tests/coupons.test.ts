@@ -8,7 +8,7 @@ import {
   type CouponRecord,
 } from '../app/lib/coupons.ts';
 
-const sample = coupons[0];
+const sample = { ...coupons[0], availability: 'available' as const };
 
 test('voucher chuyển đúng trạng thái tại biên thời gian', () => {
   const startsAt = Date.parse(sample.startsAt);

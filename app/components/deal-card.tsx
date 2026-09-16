@@ -10,7 +10,6 @@ export function DealCard({ deal }: { deal: Deal }) {
           <span className={`status-badge product-badge ${deal.kind}`}>
             {deal.badge}
           </span>
-          <span className="discount-bubble product-discount">{deal.discount}</span>
           <Image
             className="product-photo"
             src={deal.image}
@@ -23,7 +22,7 @@ export function DealCard({ deal }: { deal: Deal }) {
           <p className="deal-category product-shopline">{deal.category} · {deal.brand}</p>
           <h3>{deal.name}</h3>
           <p className="deal-description product-description">{deal.description}</p>
-          <div className="deal-price product-price"><strong>{deal.price}</strong><del>{deal.oldPrice}</del></div>
+          <small>Giá tham khảo</small><div className="deal-price product-price"><strong>{deal.price}</strong></div>
           <div className="deal-meta product-meta"><span>Ảnh từ hãng</span><span>{deal.model}</span></div>
           <span className="product-card-cta">Xem chi tiết deal <span aria-hidden="true">→</span></span>
         </div>

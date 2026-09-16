@@ -10,7 +10,7 @@ export function SiteHeader() {
         <div className="announcement-inner page-shell">
           <span className="announcement-item">
             <span className="pulse-dot" aria-hidden="true" />
-            Bản tin mua sắm có biên tập
+            Chọn món phù hợp · Mua hàng trên Shopee
           </span>
           <span className="announcement-item">Luôn kiểm tra giá và điều kiện ở bước thanh toán</span>
         </div>
@@ -30,13 +30,13 @@ export function SiteHeader() {
             />
           </Link>
 
-          <form className="header-search" action="/deal-hot" role="search">
-            <label className="sr-only" htmlFor="site-search">Tìm deal theo sản phẩm hoặc ngành hàng</label>
+          <form className="header-search" action="/san-pham" role="search">
+            <label className="sr-only" htmlFor="site-search">Tìm sản phẩm</label>
             <input
               id="site-search"
               name="q"
               type="search"
-              placeholder="Tìm deal theo sản phẩm hoặc ngành hàng"
+              placeholder="Tìm sản phẩm bạn cần..."
             />
             <button type="submit" aria-label="Tìm kiếm">
               <UiIcon name="search" />

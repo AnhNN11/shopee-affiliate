@@ -1,6 +1,6 @@
 export type CouponTone = 'hot' | 'sale' | 'voucher';
 
-export type CouponStatus = 'upcoming' | 'active' | 'expired';
+export type CouponStatus = 'upcoming' | 'active' | 'expired' | 'exhausted';
 
 export type CouponScope =
   | { type: 'platform' }
@@ -31,6 +31,8 @@ export type CouponRecord = {
   affiliateUrl?: string;
   verifiedAt: string;
   published: boolean;
+  availability?: 'available' | 'exhausted';
+  redemption?: 'code' | 'save';
 };
 
 const couponCatalog = [
@@ -45,7 +47,7 @@ const couponCatalog = [
     discount: { type: 'fixed', amountVnd: 80_000 },
     minSpendVnd: 0,
     scope: { type: 'account', audience: 'new-user' },
-    startsAt: '2026-09-03T00:00:00+07:00',
+    startsAt: '2026-09-01T00:00:00+07:00',
     endsAt: '2026-10-01T00:00:00+07:00',
     terms: [
       'Dành cho đơn hàng đầu tiên của tài khoản đủ điều kiện.',
@@ -57,7 +59,8 @@ const couponCatalog = [
     sourceUrl:
       'https://shopee.vn/voucher/details?evcode=Q1JNTlVJQ0w4MFQ5&from_source=microsite&promotionId=1494242522468352&signature=6aeeb654c7aa9ef71d87cf4992d3993ca0525e488abc39ee5c9f9ebb734796c3&source=0',
     destinationUrl: 'https://shopee.vn/m/ma-giam-gia',
-    verifiedAt: '2026-09-03T17:30:00+07:00',
+    verifiedAt: '2026-09-16T11:05:00+07:00',
+    availability: 'exhausted',
     published: true,
   },
   {
@@ -71,7 +74,7 @@ const couponCatalog = [
     discount: { type: 'fixed', amountVnd: 60_000 },
     minSpendVnd: 0,
     scope: { type: 'account', audience: 'new-user' },
-    startsAt: '2026-09-03T00:00:00+07:00',
+    startsAt: '2026-09-01T00:00:00+07:00',
     endsAt: '2026-10-01T00:00:00+07:00',
     terms: [
       'Dành cho đơn hàng đầu tiên của tài khoản đủ điều kiện.',
@@ -83,8 +86,22 @@ const couponCatalog = [
     sourceUrl:
       'https://shopee.vn/voucher/details?evcode=Q1JNTlVJQ0w2MFQ5&from_source=microsite&promotionId=1494242548551680&signature=f435950c8e9570eac1117de1748070268dbf7d3073b3343852178f737dc84319&source=0',
     destinationUrl: 'https://shopee.vn/m/ma-giam-gia',
-    verifiedAt: '2026-09-03T17:30:00+07:00',
+    verifiedAt: '2026-09-16T11:05:00+07:00',
+    availability: 'available',
     published: true,
+  },
+  {
+    id: 'freeship-don-dau-thang-9-2026', code: 'FSV-1494801891627008',
+    tone: 'voucher', badge: 'Đơn đầu tiên', title: 'Giảm phí vận chuyển tối đa 500.000đ',
+    description: 'Voucher vận chuyển cho khách hàng nhận được ưu đãi và shop đủ điều kiện. Lưu trực tiếp trên Shopee, không cần nhập mã.',
+    discount: { type: 'shipping', maxAmountVnd: 500_000 }, minSpendVnd: 0,
+    scope: { type: 'account', audience: 'new-user' },
+    startsAt: '2026-09-01T00:00:00+07:00', endsAt: '2026-10-01T00:00:00+07:00',
+    terms: ['Dành cho đơn đầu tiên, chỉ áp dụng với tài khoản nhận được ưu đãi và một số shop.', 'Giảm phí vận chuyển tối đa 500.000đ cho đơn từ 0đ thỏa điều kiện trên ứng dụng Shopee.', 'Áp dụng phương thức Nhanh, Hàng Quốc Tế và Nhanh - Shopee Xử Lý theo điều kiện nguồn.', 'Áp dụng mọi hình thức thanh toán. Lượt dùng có hạn; chương trình có thể hết trước thời hạn.'],
+    sourceName: 'Shopee — Điều kiện voucher vận chuyển',
+    sourceUrl: 'https://shopee.vn/voucher/details?evcode=RlNWLTE0OTQ4MDE4OTE2MjcwMDg%3D&from_source=microsite&promotionId=1494801891627008&signature=c3ab1dab847f67f9ffaa2b318bd05c9089fda6e9d1dede3dcdc60d8c3a008d66&source=0',
+    destinationUrl: 'https://shopee.vn/m/ma-giam-gia',
+    verifiedAt: '2026-09-16T11:05:00+07:00', published: true, availability: 'available', redemption: 'save',
   },
 ] as const satisfies readonly CouponRecord[];
 
@@ -98,6 +115,17 @@ const vietnameseDateFormatter = new Intl.DateTimeFormat('vi-VN', {
 const vndFormatter = new Intl.NumberFormat('vi-VN');
 
 export const coupons: readonly CouponRecord[] = couponCatalog;
+
+export function mergeReviewedCoupons(stored: CouponRecord[], reviewed: readonly CouponRecord[] = coupons): CouponRecord[] {
+  const merged = new Map(stored.map((coupon) => [coupon.id, coupon]));
+  for (const coupon of reviewed) {
+    const current = merged.get(coupon.id);
+    if (!current || Date.parse(coupon.verifiedAt) > Date.parse(current.verifiedAt)) merged.set(coupon.id, { ...current, ...coupon });
+  }
+  const result = [...merged.values()];
+  validateCouponCatalog(result);
+  return result;
+}
 
 function isShopeeUrl(value: string): boolean {
   try {
@@ -183,7 +211,7 @@ export function validateCouponCatalog(records: readonly CouponRecord[]): void {
 validateCouponCatalog(coupons);
 
 export function getCouponStatus(
-  coupon: Pick<CouponRecord, 'startsAt' | 'endsAt'>,
+  coupon: Pick<CouponRecord, 'startsAt' | 'endsAt' | 'availability'>,
   now: number | Date = Date.now(),
 ): CouponStatus {
   const timestamp = now instanceof Date ? now.getTime() : now;
@@ -196,11 +224,12 @@ export function getCouponStatus(
 
   if (timestamp < startsAt) return 'upcoming';
   if (timestamp >= endsAt) return 'expired';
+  if (coupon.availability === 'exhausted') return 'exhausted';
   return 'active';
 }
 
 export function getDiscoverableCoupons(now: number | Date = Date.now()): CouponRecord[] {
-  return coupons.filter((coupon) => coupon.published && getCouponStatus(coupon, now) !== 'expired');
+  return coupons.filter((coupon) => coupon.published && ['active', 'upcoming'].includes(getCouponStatus(coupon, now)));
 }
 
 export function getActiveCoupons(now: number | Date = Date.now()): CouponRecord[] {
@@ -248,6 +277,7 @@ export function formatCouponScope(scope: CouponScope): string {
 }
 
 export function getCouponStatusLabel(status: CouponStatus): string {
+  if (status === 'exhausted') return 'Đã hết lượt';
   if (status === 'upcoming') return 'Sắp mở';
   if (status === 'expired') return 'Đã hết hạn';
   return 'Trong thời hạn';

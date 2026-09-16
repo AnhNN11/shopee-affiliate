@@ -23,10 +23,14 @@ export function SiteFooter() {
 
         <nav className="footer-links" aria-label="Điều hướng chân trang">
           <span>Khám phá</span>
+          <Link href="/san-pham">Tất cả sản phẩm</Link>
           <Link href="/ma-giam-gia">Mã giảm giá</Link>
           <Link href="/deal-hot">Deal đã lọc</Link>
           <Link href="/danh-muc">Danh mục</Link>
           <Link href="/cach-chon">Cách chúng tôi chọn</Link>
+          <Link href="/huong-dan-mua-hang">Mua hàng, giao hàng & đổi trả</Link>
+          <Link href="/quyen-rieng-tu">Quyền riêng tư</Link>
+          <a href="https://www.facebook.com/profile.php?id=61594614350072" target="_blank" rel="noopener noreferrer">Facebook Chọn Chuẩn ↗</a>
         </nav>
 
         <div className="footer-editorial">

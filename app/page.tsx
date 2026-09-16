@@ -2,18 +2,20 @@ import Link from 'next/link';
 import { CouponCard } from './components/coupon-card';
 import { DealCard } from './components/deal-card';
 import { UiIcon } from './components/iconography';
-import { getActiveCoupons, getCategories, getDeals } from './lib/data';
+import { getActiveCoupons, getCategories, getDeals, getShoppingProducts } from './lib/data';
+import { ShoppingProductCard } from './components/product-explorer';
 
 export const revalidate = 60;
 
 export default async function Home() {
   const now = new Date();
-  const [activeCoupons, categories, deals] = await Promise.all([
+  const [activeCoupons, categories, deals, products] = await Promise.all([
     getActiveCoupons(now),
     getCategories(),
     getDeals(),
+    getShoppingProducts(),
   ]);
-  const featuredDeal = deals[3];
+  const featuredDeal = deals[3] || deals[0];
   const featuredCoupon = activeCoupons[0];
 
   return (
@@ -21,11 +23,11 @@ export default async function Home() {
       <section className="storefront-hero page-shell" aria-labelledby="home-hero-title">
         <article className="campaign-banner">
           <div className="campaign-copy">
-            <span className="campaign-kicker"><b>Bản tin hôm nay</b><span>Đa ngành, có chọn lọc</span></span>
+            <span className="campaign-kicker"><b>Góc mua sắm</b><span>Đa ngành, có chọn lọc</span></span>
             <h1 id="home-hero-title">Tìm đúng mã.<br /><span>Chốt đúng deal.</span></h1>
             <p>Đi thẳng tới mã giảm giá, deal đang được quan tâm và danh mục cần mua — không phải lạc trong hàng trăm sản phẩm.</p>
             <div className="campaign-actions">
-              <Link className="campaign-primary" href="/deal-hot">Khám phá deal hot <span aria-hidden="true">→</span></Link>
+              <Link className="campaign-primary" href="/san-pham">Mua sắm ngay <span aria-hidden="true">→</span></Link>
               <Link className="campaign-secondary" href="/ma-giam-gia">Lấy mã giảm giá</Link>
             </div>
             <div className="campaign-tags" aria-label="Tìm kiếm phổ biến">
@@ -36,14 +38,13 @@ export default async function Home() {
             </div>
           </div>
 
-          <Link className="campaign-product" href={`/deal-hot/${featuredDeal.id}`} aria-label={`Xem deal ${featuredDeal.name}`}>
-            <span className="campaign-discount">{featuredDeal.discount}</span>
+          {featuredDeal && <Link className="campaign-product" href={`/deal-hot/${featuredDeal.id}`} aria-label={`Xem deal ${featuredDeal.name}`}>
             <span className="campaign-product-copy">
               <small>{featuredDeal.category}</small>
               <strong>{featuredDeal.name}</strong>
-              <span><b>{featuredDeal.price}</b><del>{featuredDeal.oldPrice}</del></span>
+              <span><b>{featuredDeal.price}</b> · Giá tham khảo</span>
             </span>
-          </Link>
+          </Link>}
         </article>
 
         <aside className="hero-brief" aria-label="Ghi chú mua sắm">
@@ -56,7 +57,7 @@ export default async function Home() {
           </ol>
           <Link href="/cach-chon">Mở quy trình Chọn Chuẩn <UiIcon name="arrow" /></Link>
           {featuredCoupon
-            ? <p className="brief-voucher">Mã đã đối chiếu: <Link href={`/ma-giam-gia/${featuredCoupon.id}`}>{featuredCoupon.code}</Link></p>
+            ? <p className="brief-voucher">Ưu đãi đã đối chiếu: <Link href={`/ma-giam-gia/${featuredCoupon.id}`}>{featuredCoupon.redemption === 'save' ? featuredCoupon.title : featuredCoupon.code}</Link></p>
             : <p className="brief-voucher">Mã mới đang được đối chiếu từ nguồn Shopee.</p>}
         </aside>
       </section>
@@ -68,6 +69,8 @@ export default async function Home() {
           <div className="benefit-item"><span><UiIcon name="grid" /></span><p><strong>{categories.length} ngành hàng</strong><small>Duyệt nhanh theo nhu cầu</small></p></div>
         </div>
       </section>
+
+      <section className="commerce-section page-shell"><div className="commerce-heading"><div><p className="section-kicker">Khám phá hôm nay</p><h2>Sản phẩm cho mỗi ngày</h2></div><Link href="/san-pham">Xem {products.length} sản phẩm →</Link></div><div className="affiliate-product-grid">{products.slice(0, 8).map((product) => <ShoppingProductCard key={product.id} product={product} />)}</div></section>
 
       <section className="commerce-section category-section page-shell" aria-labelledby="category-section-title">
         <div className="commerce-heading">
@@ -100,7 +103,7 @@ export default async function Home() {
         <div className="page-shell">
           <div className="commerce-heading flash-heading">
             <div><p className="section-kicker">Deal có chọn lọc</p><h2 id="deal-section-title">Deal đang được quan tâm</h2></div>
-            <div className="heading-actions"><span className="flash-note">Ảnh từ hãng · Giá minh họa</span><Link href="/deal-hot">Xem tất cả deal <span aria-hidden="true">→</span></Link></div>
+            <div className="heading-actions"><span className="flash-note">Ảnh từ hãng · Giá tham khảo</span><Link href="/deal-hot">Xem tất cả deal <span aria-hidden="true">→</span></Link></div>
           </div>
           <div className="deal-grid home-deals">{deals.slice(0, 4).map((deal) => <DealCard key={deal.id} deal={deal} />)}</div>
         </div>

@@ -32,7 +32,7 @@ export function CouponExplorer({ coupons, initialNow }: { coupons: readonly Coup
       const scope = formatCouponScope(coupon.scope);
       const matchesFilter = filter === 'Tất cả' || scope === filter;
       const searchable = `${coupon.code} ${coupon.title} ${coupon.description} ${coupon.badge} ${coupon.sourceName} ${scope}`.toLocaleLowerCase('vi');
-      return status !== 'expired' && matchesFilter && (!keyword || searchable.includes(keyword))
+      return (status === 'active' || status === 'upcoming') && matchesFilter && (!keyword || searchable.includes(keyword))
         ? [{ coupon, status }]
         : [];
     });

@@ -5,11 +5,12 @@ import { usePathname } from 'next/navigation';
 
 const navItems = [
   { href: '/', label: 'Trang chủ' },
-  { href: '/san-pham', label: 'Sản phẩm Affiliate' },
+  { href: '/san-pham', label: 'Sản phẩm' },
   { href: '/ma-giam-gia', label: 'Mã giảm giá' },
   { href: '/deal-hot', label: 'Deal đã lọc' },
   { href: '/danh-muc', label: 'Danh mục' },
   { href: '/cach-chon', label: 'Cách chọn' },
+  { href: '/huong-dan-mua-hang', label: 'Hỗ trợ mua hàng' },
 ];
 
 export function SiteNav() {

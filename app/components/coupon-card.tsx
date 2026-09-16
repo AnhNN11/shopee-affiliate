@@ -57,8 +57,7 @@ export function CouponCard({ coupon, status }: { coupon: CouponRecord; status: C
         <span className="condition">{formatMinSpend(coupon.minSpendVnd)} · {formatCouponSchedule(coupon, status)}</span>
         <span className="coupon-source-line">Nguồn Shopee · <time dateTime={coupon.verifiedAt}>kiểm tra {formatVerifiedDate(coupon.verifiedAt)}</time></span>
         <div className="coupon-code-row">
-          <code>{coupon.code}</code>
-          <button type="button" onClick={copyCode} disabled={status !== 'active'} aria-live="polite">{copyLabel}</button>
+          {coupon.redemption === 'save' ? <><span>Lưu trực tiếp trên Shopee</span><Link href={`/ma-giam-gia/${coupon.id}`}>Xem cách lưu →</Link></> : <><code>{coupon.code}</code><button type="button" onClick={copyCode} disabled={status !== 'active'} aria-live="polite">{copyLabel}</button></>}
         </div>
         <Link className="voucher-link" href={`/ma-giam-gia/${coupon.id}`}>Xem nguồn &amp; điều kiện <span aria-hidden="true">→</span></Link>
       </div>

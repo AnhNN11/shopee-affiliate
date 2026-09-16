@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { CouponExplorer } from '@/app/components/coupon-explorer';
 import { getDiscoverableCoupons } from '@/app/lib/data';
 import { absoluteSiteUrl, createPageMetadata } from '@/app/lib/seo';
+import { voucherSources } from '@/app/lib/voucher-sources';
 
 export const revalidate = 60;
 
@@ -33,7 +34,7 @@ export default async function CouponPage() {
             itemListElement: visibleCoupons.map((coupon, index) => ({
               '@type': 'ListItem',
               position: index + 1,
-              name: `${coupon.code} — ${coupon.title}`,
+              name: coupon.redemption === 'save' ? coupon.title : `${coupon.code} — ${coupon.title}`,
               url: absoluteSiteUrl(`/ma-giam-gia/${coupon.id}`),
             })),
           },
@@ -53,14 +54,11 @@ export default async function CouponPage() {
           <section className="official-source-panel" id="nguon-chinh-thuc" aria-labelledby="official-source-title">
             <div><p className="eyebrow">Nguồn kiểm tra trực tiếp</p><h2 id="official-source-title">Không thấy mã phù hợp?</h2><p>Shopee có thể hiển thị ưu đãi khác nhau theo tài khoản, shop và khung giờ. Mở các nguồn chính thức để xem dữ liệu mới nhất.</p></div>
             <div className="official-source-links">
-              <a href="https://shopee.vn/m/ma-giam-gia" target="_blank" rel="noopener noreferrer"><strong>Trang mã Shopee</strong><span>Mã đang mở trên nền tảng ↗</span></a>
-              <a href="https://help.shopee.vn/portal/4/article/79049" target="_blank" rel="noopener noreferrer"><strong>Kho Voucher</strong><span>Cách lưu và nhập mã ↗</span></a>
-              <a href="https://help.shopee.vn/portal/4/article/79515" target="_blank" rel="noopener noreferrer"><strong>Điều kiện voucher</strong><span>Xem hạn và phạm vi dùng ↗</span></a>
-              <a href="https://shopee.vn/flash_sale/" target="_blank" rel="noopener noreferrer"><strong>Flash Sale</strong><span>Ưu đãi theo khung giờ ↗</span></a>
+              {voucherSources.map((source) => <a key={source.url} href={source.url} target="_blank" rel="noopener noreferrer"><strong>{source.name}</strong><span>{source.description} ↗</span></a>)}
             </div>
           </section>
         </div>
-        <aside className="guide-card"><span className="guide-icon">?</span><h2>Dùng mã thế nào?</h2><ol><li><span>1</span><p><strong>Đọc đúng đối tượng</strong>Mã đơn đầu tiên chỉ áp dụng cho tài khoản đủ điều kiện.</p></li><li><span>2</span><p><strong>Sao chép mã</strong>Dùng đúng chuỗi ký tự đã đối chiếu.</p></li><li><span>3</span><p><strong>Kiểm tra tại Shopee</strong>Lượt dùng và giá cuối có thể thay đổi.</p></li></ol><div className="aside-note"><strong>Affiliate đã được bật.</strong><br />Liên kết tiếp thị không làm tăng giá của bạn.</div></aside>
+        <aside className="guide-card"><span className="guide-icon">?</span><h2>Dùng mã thế nào?</h2><ol><li><span>1</span><p><strong>Đọc điều kiện</strong>Kiểm tra đối tượng, giá trị đơn và sản phẩm áp dụng.</p></li><li><span>2</span><p><strong>Sao chép hoặc lưu mã</strong>Một số voucher cần lưu trực tiếp vào tài khoản Shopee.</p></li><li><span>3</span><p><strong>Kiểm tra khi thanh toán</strong>Xác nhận mã còn lượt và mức giảm thực tế trước khi đặt hàng.</p></li></ol><div className="aside-note"><strong>Mã có thể hết lượt trước hạn.</strong><br />Nếu không áp dụng được, mở kho mã Shopee để xem ưu đãi dành cho tài khoản của bạn.</div></aside>
       </section>
     </main>
   );

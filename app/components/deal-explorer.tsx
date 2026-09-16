@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import type { Category, Deal } from '@/app/lib/catalog';
+import { normalizeSearch } from '@/app/lib/storefront';
 import { DealCard } from './deal-card';
 import { UiIcon } from './iconography';
 
@@ -23,14 +24,15 @@ export function DealExplorer({
   );
 
   const visibleDeals = useMemo(() => {
-    const keyword = query.trim().toLocaleLowerCase('vi');
+    const keyword = normalizeSearch(query);
     const filtered = deals.filter((deal) => {
       const matchesCategory = category === 'Tất cả' || deal.category === category;
-      const searchable = `${deal.name} ${deal.description} ${deal.category} ${deal.badge} ${deal.brand} ${deal.model}`.toLocaleLowerCase('vi');
+      const searchable = normalizeSearch(`${deal.name} ${deal.description} ${deal.category} ${deal.brand} ${deal.model}`);
       return matchesCategory && (!keyword || searchable.includes(keyword));
     });
-    if (sort === 'Giảm nhiều') return [...filtered].sort((a, b) => Number(b.discount.replace(/\D/g, '')) - Number(a.discount.replace(/\D/g, '')));
-    if (sort === 'Được quan tâm') return [...filtered].sort((a, b) => b.popularity - a.popularity);
+    const price = (deal: Deal) => Number(deal.price.replace(/\D/g, ''));
+    if (sort === 'Giá tăng dần') return [...filtered].sort((a, b) => price(a) - price(b));
+    if (sort === 'Giá giảm dần') return [...filtered].sort((a, b) => price(b) - price(a));
     return filtered;
   }, [category, deals, query, sort]);
 
@@ -42,7 +44,7 @@ export function DealExplorer({
           <span className="sr-only">Tìm deal</span>
           <input value={query} onChange={(event) => setQuery(event.target.value)} type="search" placeholder="Bạn đang muốn mua gì?" />
         </label>
-        <select value={sort} onChange={(event) => setSort(event.target.value)} aria-label="Sắp xếp deal"><option>Nổi bật</option><option>Giảm nhiều</option><option>Được quan tâm</option></select>
+        <select value={sort} onChange={(event) => setSort(event.target.value)} aria-label="Sắp xếp deal"><option>Nổi bật</option><option>Giá tăng dần</option><option>Giá giảm dần</option></select>
       </div>
       <div className="filter-chips spacious" role="group" aria-label="Lọc deal theo danh mục">{categoryNames.map((item) => <button type="button" key={item} className={category === item ? 'active' : ''} aria-pressed={category === item} onClick={() => setCategory(item)}>{item}</button>)}</div>
       <div className="result-summary"><strong>{visibleDeals.length}</strong> deal phù hợp <span>· Giá chỉ mang tính tham khảo</span></div>
