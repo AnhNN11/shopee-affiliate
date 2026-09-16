@@ -42,10 +42,11 @@ export function CouponCard({ coupon, status }: { coupon: CouponRecord; status: C
           : 'Sao chép mã';
 
   return (
-    <article className={`voucher-card coupon-status-${status}`}>
+    <article className={`voucher-card ${coupon.discount.type === 'shipping' ? 'is-shipping' : 'is-discount'} coupon-status-${status}`}>
       <div className={`voucher-side ${coupon.tone}`}>
         <span className="voucher-symbol"><UiIcon name={coupon.tone === 'hot' ? 'spark' : 'ticket'} /></span>
         <strong>{formatDiscountShort(coupon.discount)}</strong>
+        <small className="voucher-kind-label">{coupon.discount.type === 'shipping' ? 'VẬN CHUYỂN' : 'GIẢM ĐƠN HÀNG'}</small>
       </div>
       <div className="voucher-body">
         <div className="badge-row">
@@ -57,7 +58,7 @@ export function CouponCard({ coupon, status }: { coupon: CouponRecord; status: C
         <span className="condition">{formatMinSpend(coupon.minSpendVnd)} · {formatCouponSchedule(coupon, status)}</span>
         <span className="coupon-source-line">Nguồn Shopee · <time dateTime={coupon.verifiedAt}>kiểm tra {formatVerifiedDate(coupon.verifiedAt)}</time></span>
         <div className="coupon-code-row">
-          {coupon.redemption === 'save' ? <><span>Lưu trực tiếp trên Shopee</span><Link href={`/ma-giam-gia/${coupon.id}`}>Xem cách lưu →</Link></> : <><code>{coupon.code}</code><button type="button" onClick={copyCode} disabled={status !== 'active'} aria-live="polite">{copyLabel}</button></>}
+          {coupon.redemption === 'save' ? <><span>Không cần nhập mã</span>{status === 'active' ? <a className="voucher-save-button" href={`/go/ma-giam-gia/${coupon.id}`} target="_blank" rel="nofollow sponsored noopener noreferrer">Lưu trên Shopee ↗</a> : <span>{getCouponStatusLabel(status)}</span>}</> : <><code>{coupon.code}</code><button type="button" onClick={copyCode} disabled={status !== 'active'} aria-live="polite">{copyLabel}</button></>}
         </div>
         <Link className="voucher-link" href={`/ma-giam-gia/${coupon.id}`}>Xem nguồn &amp; điều kiện <span aria-hidden="true">→</span></Link>
       </div>

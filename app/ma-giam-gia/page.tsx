@@ -45,21 +45,22 @@ export default async function CouponPage() {
   return (
     <main>
       {structuredData ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }} /> : null}
-      <section className="subpage-hero coupon-hero">
-        <div className="page-shell"><span className="hero-kicker"><b>KHO MÃ</b> Có nguồn · Có ngày kiểm tra</span><h1>Mã giảm giá Shopee.</h1><p>Chỉ hiển thị mã đã đối chiếu với nguồn Shopee. Sao chép mã, đọc điều kiện và luôn xác nhận mức giảm cuối cùng tại bước thanh toán.</p></div>
-      </section>
-      <section className="content-with-aside page-shell">
-        <div className="main-content">
-          <CouponExplorer coupons={visibleCoupons} initialNow={now.toISOString()} />
-          <section className="official-source-panel" id="nguon-chinh-thuc" aria-labelledby="official-source-title">
-            <div><p className="eyebrow">Nguồn kiểm tra trực tiếp</p><h2 id="official-source-title">Không thấy mã phù hợp?</h2><p>Shopee có thể hiển thị ưu đãi khác nhau theo tài khoản, shop và khung giờ. Mở các nguồn chính thức để xem dữ liệu mới nhất.</p></div>
-            <div className="official-source-links">
-              {voucherSources.map((source) => <a key={source.url} href={source.url} target="_blank" rel="noopener noreferrer"><strong>{source.name}</strong><span>{source.description} ↗</span></a>)}
-            </div>
-          </section>
+      <section className="voucher-mall-hero">
+        <div className="page-shell voucher-mall-hero-inner">
+          <div><span className="voucher-mall-kicker">CHỌN CHUẨN / TRẠM VOUCHER</span><h1>Săn mã đúng gu.<br /><em>Mua sắm nhẹ ví.</em></h1><p>Tìm ưu đãi cho món bạn thích. Đọc điều kiện, lưu mã và kiểm tra giá cuối trên Shopee.</p><a className="voucher-hero-button" href="#kho-voucher">Khám phá voucher <span>↓</span></a><small>Website độc lập · Không phải trang chính thức của Shopee</small></div>
+          <div className="voucher-hero-art" aria-hidden="true"><span className="voucher-art-star">✦</span><div className="voucher-art-ticket ticket-back"><span>CHỌN CHUẨN</span><strong>FREESHIP</strong><small>Khám phá ưu đãi vận chuyển</small></div><div className="voucher-art-ticket ticket-front"><span>VOUCHER CÓ NGUỒN</span><strong>%</strong><small>Chọn mã hợp đơn hàng</small></div><span className="voucher-art-caption">Lưu mã · Kiểm tra · Đặt hàng</span></div>
         </div>
-        <aside className="guide-card"><span className="guide-icon">?</span><h2>Dùng mã thế nào?</h2><ol><li><span>1</span><p><strong>Đọc điều kiện</strong>Kiểm tra đối tượng, giá trị đơn và sản phẩm áp dụng.</p></li><li><span>2</span><p><strong>Sao chép hoặc lưu mã</strong>Một số voucher cần lưu trực tiếp vào tài khoản Shopee.</p></li><li><span>3</span><p><strong>Kiểm tra khi thanh toán</strong>Xác nhận mã còn lượt và mức giảm thực tế trước khi đặt hàng.</p></li></ol><div className="aside-note"><strong>Mã có thể hết lượt trước hạn.</strong><br />Nếu không áp dụng được, mở kho mã Shopee để xem ưu đãi dành cho tài khoản của bạn.</div></aside>
       </section>
+      <div className="page-shell voucher-mall-body">
+        <div className="voucher-benefits"><span>✓ Nguồn Shopee chính thức</span><span>✓ Hiển thị điều kiện sử dụng</span><span>✓ Có ngày đối chiếu</span></div>
+        <CouponExplorer coupons={visibleCoupons} initialNow={now.toISOString()} />
+        <section className="voucher-discovery" id="nguon-chinh-thuc" aria-labelledby="official-source-title">
+          <div className="voucher-section-heading"><div><span className="eyebrow">Thêm lựa chọn, thêm ưu đãi</span><h2 id="official-source-title">Khám phá kho ưu đãi Shopee</h2></div><span>{voucherSources.length} điểm đến chính thức ↗</span></div>
+          <p>Đây là các trang khám phá, không phải mã đã xác minh. Ưu đãi hiển thị có thể khác theo tài khoản và thời điểm.</p>
+          <div className="voucher-discovery-grid">{voucherSources.map((source, index) => <a className={`voucher-destination destination-${index}`} key={source.url} href={source.url} target="_blank" rel="noopener noreferrer"><span className="destination-icon" aria-hidden="true">{['%','↗','✦','▦','▶'][index]}</span><small>KHÁM PHÁ TRÊN SHOPEE</small><h3>{source.name}</h3><p>{source.description}</p><strong>Mở kho ưu đãi <span>↗</span></strong></a>)}</div>
+        </section>
+        <section className="voucher-howto" aria-labelledby="voucher-howto-title"><div><span className="eyebrow">Mua sắm dễ hơn</span><h2 id="voucher-howto-title">Một phút trước khi chốt đơn</h2><p>Mã phù hợp mới là mã tiết kiệm.</p></div><ol><li><b>01</b><div><strong>Chọn đúng điều kiện</strong><p>Xem đối tượng, đơn tối thiểu và sản phẩm áp dụng.</p></div></li><li><b>02</b><div><strong>Sao chép hoặc lưu mã</strong><p>Mã vận chuyển cần lưu trực tiếp trên Shopee.</p></div></li><li><b>03</b><div><strong>Kiểm tra tổng tiền</strong><p>Xác nhận giảm giá và phí giao hàng trước khi đặt.</p></div></li></ol></section>
+      </div>
     </main>
   );
 }
